@@ -10,24 +10,10 @@ const nextConfig: NextConfig = {
   },
   // Nonaktifkan trailing slash untuk konsistensi
   trailingSlash: false,
-  // Pastikan URL selalu memiliki locale untuk non-default
-  async redirects() {
-    return [
-      {
-        source: '/',
-        has: [
-          {
-            type: 'header',
-            key: 'accept-language',
-            value: 'en',
-          },
-        ],
-        destination: '/en',
-        permanent: false,
-        locale: false,
-      },
-    ];
-  },
+  // Hapus redirect berbasis header untuk mencegah loop di iOS Safari
+  // async redirects() {
+  //   return [];
+  // },
   // Environment variables
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://bpf-admin.newsmaker.id',
