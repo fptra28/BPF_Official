@@ -12,10 +12,14 @@ export default function ModalPopup({ isOpen, onClose, children }: ModalPopupProp
     // Handle escape key and body scroll
     useEffect(() => {
         if (isOpen) {
-            // Prevent body scroll when modal is open
-            document.body.style.overflow = 'hidden';
+            // Simpan posisi scroll saat ini
+            const scrollY = window.scrollY;
+            
+            // Prevent body scroll when modal is open (solusi yang lebih aman untuk iOS)
             document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
             document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
             
             const handleKeyDown = (e: KeyboardEvent) => {
                 if (e.key === 'Escape') {
@@ -24,12 +28,19 @@ export default function ModalPopup({ isOpen, onClose, children }: ModalPopupProp
             };
             
             document.addEventListener('keydown', handleKeyDown);
+            
             return () => {
                 document.removeEventListener('keydown', handleKeyDown);
-                // Restore body scroll when modal is closed
-                document.body.style.overflow = '';
+                
+                // Kembalikan scroll ke posisi semula
+                const scrollY = document.body.style.top;
                 document.body.style.position = '';
+                document.body.style.top = '';
                 document.body.style.width = '';
+                document.body.style.overflow = '';
+                
+                // Restore scroll position
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
             };
         }
     }, [isOpen, onClose]);

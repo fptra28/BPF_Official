@@ -50,30 +50,25 @@ export default function HomePage() {
     // Pastikan kode ini hanya berjalan di client-side
     if (typeof window === 'undefined') return;
 
-    // Cek apakah modal sudah pernah ditampilkan di session ini
-    const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
-    
-    // Hanya tampilkan modal jika belum pernah ditampilkan di session ini
-    // dan hanya di perangkat mobile
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-    if (!hasSeenModal && isMobile) {
-      // Tunggu 1 detik sebelum menampilkan modal
-      const timer = setTimeout(() => {
+    // Tampilkan modal setelah 1 detik
+    const timer = setTimeout(() => {
+      try {
         setShowModal(true);
-        sessionStorage.setItem('hasSeenWelcomeModal', 'true');
-      }, 1000);
-      
-      return () => clearTimeout(timer);
-    }
+      } catch (error) {
+        console.error('Error showing welcome modal:', error);
+      }
+    }, 1000);
+    
+    // Bersihkan timer saat komponen di-unmount
+    return () => clearTimeout(timer);
   }, []);
 
   const handleCloseModal = () => setShowModal(false);
 
   return (
     <PageTemplate>
-      <div className="fixed top-4 right-4 z-50">
-      </div>
+      {/* Spacer untuk padding atas */}
+      <div className="h-4"></div>
       
       {/* Welcome Modal */}
       <DynamicWelcomeModal isOpen={showModal} onClose={handleCloseModal} />
