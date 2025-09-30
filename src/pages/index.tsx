@@ -36,8 +36,8 @@ export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // Buka modal otomatis saat halaman load
-    setShowModal(true);
+    // Nonaktifkan sementara modal welcome
+    // setShowModal(true);
   }, []);
 
   const handleCloseModal = () => setShowModal(false);

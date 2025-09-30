@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { fetchLatestNews, NewsItem } from "@/services/newsService";
 import Link from "next/link";
 
@@ -38,68 +38,86 @@ export default function MarketUpdate() {
         setLatestNews(newsWithCategory);
     };
 
-    useEffect(() => {
-        const fetchMarketData = async () => {
-            try {
-                const res = await fetch('/api/market');
+    // Gunakan useRef untuk menyimpan interval ID
+    const intervalRef = React.useRef<{market: NodeJS.Timeout | null, news: NodeJS.Timeout | null}>({market: null, news: null});
 
-                if (!res.ok) {
-                    const errorText = `${res.status} ${res.statusText}`;
-                    console.error('Respon error:', errorText);
-                    setErrorMessage(errorText);
-                    setMarketData([]);
-                    return;
-                }
+    const fetchMarketData = useCallback(async () => {
+        try {
+            const res = await fetch('/api/market');
 
-                const data = await res.json();
-
-                const filteredData = data
-                    .filter((item: any) => item?.symbol && typeof item.last === 'number')
-                    .map((item: any): MarketItem => ({
-                        symbol: String(item.symbol),
-                        last: Number(item.last),
-                        percentChange: Number(item.percentChange) || 0,
-                    }));
-
-                setMarketData(filteredData);
-                setErrorMessage(""); // clear error
-            } catch (error: any) {
-                console.error('Fetch gagal:', error);
-                setErrorMessage(error?.message || "Gagal memuat data");
+            if (!res.ok) {
+                const errorText = `${res.status} ${res.statusText}`;
+                console.error('Respon error:', errorText);
+                setErrorMessage(errorText);
                 setMarketData([]);
+                return;
             }
-        };
 
-        const fetchData = async () => {
-            try {
-                await Promise.all([
-                    fetchMarketData(),
-                    fetchLatestNews(5).then(updateNews),
-                ]);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            const data = await res.json();
 
-        fetchData();
+            const filteredData = data
+                .filter((item: any) => item?.symbol && typeof item.last === 'number')
+                .map((item: any): MarketItem => ({
+                    symbol: String(item.symbol),
+                    last: Number(item.last),
+                    percentChange: Number(item.percentChange) || 0,
+                }));
 
-        // Fetch data market lebih sering (setiap 10 detik)
-        const marketInterval = setInterval(() => {
-            fetchMarketData();
-        }, 10000);
-
-        // Fetch data berita lebih jarang (setiap 5 menit)
-        const newsInterval = setInterval(() => {
-            fetchLatestNews(5).then(updateNews);
-        }, 5 * 60 * 1000);
-
-        return () => {
-            clearInterval(marketInterval);
-            clearInterval(newsInterval);
-        };
+            setMarketData(filteredData);
+            setErrorMessage(""); // clear error
+        } catch (error: any) {
+            console.error('Fetch gagal:', error);
+            setErrorMessage(error?.message || "Gagal memuat data");
+            setMarketData([]);
+        }
     }, []);
+
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            await Promise.all([
+                fetchMarketData(),
+                fetchLatestNews(5).then(updateNews),
+            ]);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchMarketData]);
+
+    useEffect(() => {
+        // Hanya jalankan di client-side
+        if (typeof window !== 'undefined') {
+            fetchData();
+
+            // Gunakan requestAnimationFrame untuk menghindari masalah di iOS
+            const startMarketUpdates = () => {
+                if (intervalRef.current.market) clearInterval(intervalRef.current.market);
+                intervalRef.current.market = setInterval(() => {
+                    fetchMarketData();
+                }, 30000); // Kurangi frekuensi update menjadi 30 detik
+            };
+
+            const startNewsUpdates = () => {
+                if (intervalRef.current.news) clearInterval(intervalRef.current.news);
+                intervalRef.current.news = setInterval(() => {
+                    fetchLatestNews(5).then(updateNews);
+                }, 10 * 60 * 1000); // 10 menit
+            };
+
+            // Mulai interval dengan delay untuk menghindari race condition
+            const marketTimer = setTimeout(startMarketUpdates, 1000);
+            const newsTimer = setTimeout(startNewsUpdates, 5000);
+
+            return () => {
+                clearTimeout(marketTimer);
+                clearTimeout(newsTimer);
+                if (intervalRef.current.market) clearInterval(intervalRef.current.market);
+                if (intervalRef.current.news) clearInterval(intervalRef.current.news);
+            };
+        }
+    }, [fetchData, fetchMarketData]);
 
     const formatPrice = (symbol: string, price: number): string => {
         if (!price && price !== 0) return '-';
