@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
+import ModalPopup from './ModalPopup';
 
 interface SimpleWelcomeModalProps {
   isOpen: boolean;
@@ -9,134 +10,59 @@ interface SimpleWelcomeModalProps {
 
 const SimpleWelcomeModal: React.FC<SimpleWelcomeModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation('welcome');
-  const modalRef = useRef<HTMLDivElement>(null);
-  const scrollY = useRef(0);
-
-  // Handle scroll when modal is open - iOS compatible
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const html = document.documentElement;
-    
-    if (isOpen) {
-      // Save current scroll position
-      scrollY.current = window.scrollY;
-      
-      // Lock scroll on iOS
-      html.style.overflow = 'hidden';
-      html.style.position = 'fixed';
-      html.style.width = '100%';
-      html.style.height = '100%';
-      
-      // Prevent bounce effect on iOS
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${scrollY.current}px`;
-    } else {
-      // Re-enable scroll
-      html.style.overflow = '';
-      html.style.position = '';
-      html.style.width = '';
-      html.style.height = '';
-      
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      
-      // Restore scroll position
-      window.scrollTo(0, scrollY.current);
-    }
-
-    return () => {
-      if (isOpen) {
-        html.style.overflow = '';
-        html.style.position = '';
-        html.style.width = '';
-        html.style.height = '';
-        
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-        
-        window.scrollTo(0, scrollY.current);
-      }
-    };
-  }, [isOpen]);
-
-  if (typeof window === 'undefined' || !isOpen) return null;
+  
+  if (typeof window === 'undefined') return null;
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm"
-      style={{
-        WebkitTapHighlightColor: 'transparent',
-      }}
-      onClick={onClose}
-    >
-      <div 
-        className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-6 max-w-md w-full mx-4 overflow-hidden shadow-xl transform transition-all border border-white/20"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          WebkitTransform: 'translateZ(0)',
-          transform: 'translateZ(0)',
-          WebkitBackfaceVisibility: 'hidden',
-          backfaceVisibility: 'hidden',
-          backdropFilter: 'blur(10px)'
-        }}
-      >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 text-2xl"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-
-        {/* Content */}
-        <div className="text-center">
-          <div className="w-32 h-32 mx-auto mb-6 relative">
-            <Image
-              src="/assets/bpf-logo.png"
-              alt="Bestprofit Futures"
-              fill
-              className="object-contain"
-              priority
-              unoptimized={process.env.NODE_ENV !== 'production'}
-            />
-          </div>
-          
-          <h1 className="text-2xl font-bold text-[#080031] mb-4">
-            {t('title')}
-          </h1>
-          
-          <p className="text-[#080031]/90 mb-6">
-            {t('description')}
-          </p>
-          
-          <div className="space-y-4">
-            <a
-              href="https://www.bestprofit-futures.co.id/register"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-[#FF0000] hover:bg-[#E60000] text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-            >
-              {t('registerButton')}
-            </a>
-            
-            <button
-              onClick={onClose}
-              className="text-[#9B9FA7] hover:text-[#080031] text-sm font-medium transition-colors"
-            >
-              {t('laterButton')}
-            </button>
+    <ModalPopup isOpen={isOpen} onClose={onClose}>
+      <div className="relative p-4 md:p-6 text-center max-w-md w-full">
+        {/* Decorative elements */}
+        <div className="absolute -top-3 -right-3 w-16 h-16 bg-[#FF0000]/20 rounded-full -z-10"></div>
+        <div className="absolute -bottom-3 -left-3 w-24 h-24 bg-[#FF0000]/10 rounded-full -z-10"></div>
+        
+        {/* Logo with border */}
+        <div className="mb-4">
+          <div className="mx-auto w-24 h-24 p-1.5 bg-white border-2 border-[#FF0000] rounded-xl shadow-sm">
+            <div className="bg-white p-2 rounded-lg h-full flex items-center justify-center">
+              <Image 
+                src="/assets/bpf-logo.png" 
+                alt="Bestprofit Futures" 
+                width={96}
+                height={96}
+                className="h-full w-auto object-contain"
+                priority
+              />
+            </div>
           </div>
         </div>
+
+        {/* Content */}
+        <h1 className="text-2xl md:text-3xl font-bold text-[#4C4C4C] mb-4">
+          {t('title')}
+        </h1>
+        
+        <p className="text-[#4C4C4C] text-base mb-6 max-w-md mx-auto leading-relaxed">
+          {t('description')}
+        </p>
+        
+        <div className="space-y-4">
+          <a 
+            href="https://www.bestprofit-futures.co.id/register" 
+            className="inline-block w-full max-w-[280px] mx-auto bg-[#FF0000] hover:bg-[#E60000] text-white font-semibold py-2.5 px-5 rounded-lg shadow-sm hover:shadow transition-all duration-200"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('registerButton')}
+          </a>
+          <button 
+            onClick={onClose}
+            className="w-full max-w-[280px] mx-auto text-[#9B9FA7] hover:text-[#4C4C4C] text-xs font-medium transition-colors duration-200 block mt-2"
+          >
+            {t('laterButton')}
+          </button>
+        </div>
       </div>
-    </div>
+    </ModalPopup>
   );
 };
 

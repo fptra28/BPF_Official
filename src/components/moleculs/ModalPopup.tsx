@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ModalPopupProps {
     isOpen: boolean;
@@ -7,76 +7,52 @@ interface ModalPopupProps {
 }
 
 export default function ModalPopup({ isOpen, onClose, children }: ModalPopupProps) {
-    const [visible, setVisible] = useState(false);
-    const [isMounted, setIsMounted] = useState(false);
+    const [visible, setVisible] = useState(isOpen);
 
-    // Handle escape key
-    const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-            onClose();
-        }
-    }, [onClose]);
-
+    // Handle escape key and body scroll
     useEffect(() => {
         if (isOpen) {
-            setIsMounted(true);
-            const timer = setTimeout(() => {
-                setVisible(true);
-                document.body.style.overflow = 'hidden';
-                document.body.style.position = 'fixed';
-                document.body.style.width = '100%';
-            }, 50);
-            return () => clearTimeout(timer);
-        } else {
-            setVisible(false);
-            const timer = setTimeout(() => {
-                setIsMounted(false);
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (e.key === 'Escape') {
+                    onClose();
+                }
+            };
+            
+            document.addEventListener('keydown', handleKeyDown);
+            return () => {
+                document.removeEventListener('keydown', handleKeyDown);
+                // Restore body scroll when modal is closed
                 document.body.style.overflow = '';
                 document.body.style.position = '';
                 document.body.style.width = '';
-            }, 300);
-            return () => clearTimeout(timer);
+            };
         }
-    }, [isOpen]);
+    }, [isOpen, onClose]);
 
     useEffect(() => {
         if (isOpen) {
-            document.addEventListener('keydown', handleKeyDown);
+            setVisible(true);
+        } else {
+            const timeout = setTimeout(() => setVisible(false), 300); // Durasi sama dengan CSS
+            return () => clearTimeout(timeout);
         }
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [isOpen, handleKeyDown]);
+    }, [isOpen]);
 
-    if (!isMounted) return null;
-
-    // Touch event handlers for better mobile support
-    const handleTouchMove = (e: React.TouchEvent) => {
-        // Prevent scrolling when modal is open
-        e.preventDefault();
-    };
+    if (!visible) return null;
 
     return (
         <div
-            className={`fixed inset-0 z-40 flex items-center justify-center bg-black/80 px-3 transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0'}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-3 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
             onClick={onClose}
-            onTouchMove={handleTouchMove}
-            style={{
-                WebkitOverflowScrolling: 'touch',
-                touchAction: 'none',
-                overscrollBehavior: 'contain',
-                WebkitTapHighlightColor: 'transparent'
-            }}
         >
             <div
-                className={`bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative transform transition-all duration-300 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                className={`bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative transform transition-all duration-300 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                 onClick={(e) => e.stopPropagation()}
-                style={{
-                    WebkitTransform: 'translateZ(0)',
-                    transform: 'translateZ(0)',
-                    WebkitBackfaceVisibility: 'hidden',
-                    backfaceVisibility: 'hidden'
-                }}
             >
                 <button
                     className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl focus:outline-none"

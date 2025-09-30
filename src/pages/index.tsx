@@ -46,11 +46,9 @@ const DynamicWelcomeModal = dynamic(
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
-  const hasShownModal = useRef(false);
-  
   useEffect(() => {
     // Pastikan kode ini hanya berjalan di client-side
-    if (typeof window === 'undefined' || hasShownModal.current) return;
+    if (typeof window === 'undefined') return;
 
     // Cek apakah modal sudah pernah ditampilkan di session ini
     const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
@@ -60,25 +58,13 @@ export default function HomePage() {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
     if (!hasSeenModal && isMobile) {
-      // Gunakan requestAnimationFrame untuk memastikan DOM sudah siap
-      const showModalTimeout = requestAnimationFrame(() => {
-        const timer = setTimeout(() => {
-          try {
-            setShowModal(true);
-            sessionStorage.setItem('hasSeenWelcomeModal', 'true');
-            hasShownModal.current = true;
-          } catch (error) {
-            console.error('Error showing welcome modal:', error);
-          }
-        }, 1000);
-        
-        return () => {
-          clearTimeout(timer);
-          cancelAnimationFrame(showModalTimeout);
-        };
-      });
+      // Tunggu 1 detik sebelum menampilkan modal
+      const timer = setTimeout(() => {
+        setShowModal(true);
+        sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+      }, 1000);
       
-      return () => cancelAnimationFrame(showModalTimeout);
+      return () => clearTimeout(timer);
     }
   }, []);
 
