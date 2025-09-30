@@ -12,30 +12,55 @@ const SimpleWelcomeModal: React.FC<SimpleWelcomeModalProps> = ({ isOpen, onClose
   const modalRef = useRef<HTMLDivElement>(null);
   const scrollY = useRef(0);
 
-  // Handle scroll when modal is open
+  // Handle scroll when modal is open - iOS compatible
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    
+    const html = document.documentElement;
     
     if (isOpen) {
       // Save current scroll position
       scrollY.current = window.scrollY;
-      // Disable scroll
+      
+      // Lock scroll on iOS
+      html.style.overflow = 'hidden';
+      html.style.position = 'fixed';
+      html.style.width = '100%';
+      html.style.height = '100%';
+      
+      // Prevent bounce effect on iOS
+      document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY.current}px`;
       document.body.style.width = '100%';
+      document.body.style.top = `-${scrollY.current}px`;
     } else {
-      // Re-enable scroll and restore position
+      // Re-enable scroll
+      html.style.overflow = '';
+      html.style.position = '';
+      html.style.width = '';
+      html.style.height = '';
+      
+      document.body.style.overflow = '';
       document.body.style.position = '';
-      document.body.style.top = '';
       document.body.style.width = '';
+      document.body.style.top = '';
+      
+      // Restore scroll position
       window.scrollTo(0, scrollY.current);
     }
 
     return () => {
       if (isOpen) {
+        html.style.overflow = '';
+        html.style.position = '';
+        html.style.width = '';
+        html.style.height = '';
+        
+        document.body.style.overflow = '';
         document.body.style.position = '';
-        document.body.style.top = '';
         document.body.style.width = '';
+        document.body.style.top = '';
+        
         window.scrollTo(0, scrollY.current);
       }
     };

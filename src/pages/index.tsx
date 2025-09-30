@@ -51,20 +51,34 @@ export default function HomePage() {
   useEffect(() => {
     // Pastikan kode ini hanya berjalan di client-side
     if (typeof window === 'undefined' || hasShownModal.current) return;
-    
+
     // Cek apakah modal sudah pernah ditampilkan di session ini
     const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
     
-    if (!hasSeenModal) {
-      // Tampilkan modal setelah 1 detik
-      const timer = setTimeout(() => {
-        // Tampilkan modal di semua perangkat
-        setShowModal(true);
-        sessionStorage.setItem('hasSeenWelcomeModal', 'true');
-        hasShownModal.current = true;
-      }, 1000);
+    // Hanya tampilkan modal jika belum pernah ditampilkan di session ini
+    // dan hanya di perangkat mobile
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (!hasSeenModal && isMobile) {
+      // Gunakan requestAnimationFrame untuk memastikan DOM sudah siap
+      const showModalTimeout = requestAnimationFrame(() => {
+        const timer = setTimeout(() => {
+          try {
+            setShowModal(true);
+            sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+            hasShownModal.current = true;
+          } catch (error) {
+            console.error('Error showing welcome modal:', error);
+          }
+        }, 1000);
+        
+        return () => {
+          clearTimeout(timer);
+          cancelAnimationFrame(showModalTimeout);
+        };
+      });
       
-      return () => clearTimeout(timer);
+      return () => cancelAnimationFrame(showModalTimeout);
     }
   }, []);
 
