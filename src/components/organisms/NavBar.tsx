@@ -201,7 +201,7 @@ const NavBar: React.FC = () => {
 
           return (
             <div key={itemKey} className="border-b border-[#9B9FA7]/10 last:border-0">
-              <span className="block px-6 py-3 text-base font-medium text-[#080031]">
+              <span className="block px-6 py-3 text-base font-medium text-[#080031] hover:text-[#FF0000] transition-colors">
                 {item.label}
               </span>
             </div>
@@ -313,7 +313,7 @@ const NavBar: React.FC = () => {
             <div className="flex items-center md:hidden">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-[#4C4C4C] hover:text-[#F2AC59] hover:bg-[#F8F8F8] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#F2AC59]"
+                className="inline-flex items-center justify-center p-2 rounded-md text-[#080031] hover:text-[#FF0000] hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#FF0000]"
               >
                 <i className={`fas ${menuOpen ? "fa-times" : "fa-bars"} text-xl`} />
               </button>
@@ -329,24 +329,24 @@ const NavBar: React.FC = () => {
           }`}
         >
           {/* Backdrop overlay */}
-          <div className={`absolute inset-0 bg-black/50 ${menuOpen ? 'opacity-100' : 'opacity-0'} transition-opacity`} />
+          <div className="absolute inset-0 bg-[#F8F8F8]/50 ${menuOpen ? 'opacity-100' : 'opacity-0'} transition-opacity" />
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`fixed inset-y-0 left-0 z-50 w-2/3 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+            className={`fixed inset-y-0 left-0 z-50 w-2/3 bg-[#F8F8F8] shadow-lg transform transition-transform duration-300 ease-in-out ${
               menuOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             <div className="flex items-center justify-between p-4 border-b border-[#9B9FA7]/30">
               <div className="flex items-center">
-                <img src="/assets/ewf-logo.png" alt="Logo EWF" className="h-10 w-auto" />
-                <span className="ml-2 text-lg font-bold text-[#4C4C4C]">EquityWorld Futures</span>
+                <img src="/assets/bpf-logo.png" alt="Logo BPF" className="h-10 w-auto" />
+                <span className="ml-2 text-lg font-bold text-[#080031]">BESTPROFIT FUTURES</span>
               </div>
             </div>
             <div className="h-[calc(100%-64px)] overflow-y-auto py-2">
               {renderMobileMenu(menuItems)}
               <div className="p-4 border-t border-[#9B9FA7]/10">
-                <div className="text-xs text-[#9B9FA7] text-center">
-                  © {new Date().getFullYear()} EquityWorld Futures. All rights reserved.
+                <div className="text-xs text-[#080031] text-center">
+                  © {new Date().getFullYear()} Bestprofit Futures. All rights reserved.
                 </div>
               </div>
             </div>
