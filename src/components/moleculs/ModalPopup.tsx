@@ -9,42 +9,6 @@ interface ModalPopupProps {
 export default function ModalPopup({ isOpen, onClose, children }: ModalPopupProps) {
     const [visible, setVisible] = useState(isOpen);
 
-    // Handle escape key and body scroll
-    useEffect(() => {
-        if (isOpen) {
-            // Simpan posisi scroll saat ini
-            const scrollY = window.scrollY;
-            
-            // Prevent body scroll when modal is open (solusi yang lebih aman untuk iOS)
-            document.body.style.position = 'fixed';
-            document.body.style.top = `-${scrollY}px`;
-            document.body.style.width = '100%';
-            document.body.style.overflow = 'hidden';
-            
-            const handleKeyDown = (e: KeyboardEvent) => {
-                if (e.key === 'Escape') {
-                    onClose();
-                }
-            };
-            
-            document.addEventListener('keydown', handleKeyDown);
-            
-            return () => {
-                document.removeEventListener('keydown', handleKeyDown);
-                
-                // Kembalikan scroll ke posisi semula
-                const scrollY = document.body.style.top;
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.width = '';
-                document.body.style.overflow = '';
-                
-                // Restore scroll position
-                window.scrollTo(0, parseInt(scrollY || '0') * -1);
-            };
-        }
-    }, [isOpen, onClose]);
-
     useEffect(() => {
         if (isOpen) {
             setVisible(true);
@@ -66,9 +30,8 @@ export default function ModalPopup({ isOpen, onClose, children }: ModalPopupProp
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
-                    className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl focus:outline-none"
+                    className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
                     onClick={onClose}
-                    aria-label="Tutup"
                 >
                     &times;
                 </button>
