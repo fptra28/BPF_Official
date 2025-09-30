@@ -37,7 +37,7 @@ export default function HomePage() {
 
   useEffect(() => {
     // Nonaktifkan sementara modal welcome
-    // setShowModal(true);
+    setShowModal(true);
   }, []);
 
   const handleCloseModal = () => setShowModal(false);
