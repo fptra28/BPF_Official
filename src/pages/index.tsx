@@ -10,7 +10,13 @@ import BeritaSection from "@/components/organisms/BeritaSection";
 import AboutUs from "@/components/organisms/AboutUs";
 import Iso from "@/components/organisms/Market";
 import Pengumuman from "@/components/organisms/Pengumuman";
-import WelcomeModal from "@/components/moleculs/WelcomeModal";
+import dynamic from 'next/dynamic';
+
+// Gunakan dynamic import dengan ssr: false untuk mencegah masalah dengan window object
+const WelcomeModal = dynamic(
+  () => import('@/components/moleculs/SimpleWelcomeModal'),
+  { ssr: false }
+);
 import WakilPialangSection from "@/components/organisms/WakilPialangSection";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
@@ -32,12 +38,33 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 
+// Gunakan dynamic import untuk mencegah error SSR
+const DynamicWelcomeModal = dynamic(
+  () => import('@/components/moleculs/SimpleWelcomeModal'),
+  { ssr: false }
+);
+
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
-
+  
   useEffect(() => {
-    // Nonaktifkan sementara modal welcome
-    setShowModal(true);
+    // Pastikan kode ini hanya berjalan di client-side
+    if (typeof window === 'undefined') return;
+    
+    // Tampilkan modal setelah 1 detik
+    const timer = setTimeout(() => {
+      // Tampilkan modal di semua perangkat untuk testing
+      // Nanti bisa diubah kembali ke pengecekan perangkat mobile
+      setShowModal(true);
+      
+      // Kode asli untuk mengecek perangkat mobile:
+      // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      // if (isMobile) {
+      //   setShowModal(true);
+      // }
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const handleCloseModal = () => setShowModal(false);
@@ -48,7 +75,7 @@ export default function HomePage() {
       </div>
       
       {/* Welcome Modal */}
-      <WelcomeModal isOpen={showModal} onClose={handleCloseModal} />
+      <DynamicWelcomeModal isOpen={showModal} onClose={handleCloseModal} />
 
       {/* Carousel */}
       <CarouselWithContent />
