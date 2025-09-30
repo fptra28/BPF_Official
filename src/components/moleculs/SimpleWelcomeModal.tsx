@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
@@ -9,26 +9,39 @@ interface SimpleWelcomeModalProps {
 
 const SimpleWelcomeModal: React.FC<SimpleWelcomeModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation('welcome');
+  const modalRef = useRef<HTMLDivElement>(null);
+  const scrollY = useRef(0);
 
-  // Blok scroll saat modal terbuka
+  // Handle scroll when modal is open
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      // Save current scroll position
+      scrollY.current = window.scrollY;
+      // Disable scroll
       document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY.current}px`;
       document.body.style.width = '100%';
     } else {
-      document.body.style.overflow = '';
+      // Re-enable scroll and restore position
       document.body.style.position = '';
+      document.body.style.top = '';
       document.body.style.width = '';
+      window.scrollTo(0, scrollY.current);
     }
+
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      if (isOpen) {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY.current);
+      }
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (typeof window === 'undefined' || !isOpen) return null;
 
   return (
     <div 

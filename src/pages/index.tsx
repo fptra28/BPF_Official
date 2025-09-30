@@ -1,12 +1,11 @@
 // Home
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from 'react';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import PageTemplate from "@/components/templates/PageTemplate";
 import CarouselWithContent from "@/components/organisms/CarouselWithContent";
 import ProdukContainer from "@/components/organisms/ProdukContainer";
-import BeritaSection from "@/components/organisms/BeritaSection";
 import AboutUs from "@/components/organisms/AboutUs";
 import Iso from "@/components/organisms/Market";
 import Pengumuman from "@/components/organisms/Pengumuman";
@@ -18,6 +17,7 @@ const WelcomeModal = dynamic(
   { ssr: false }
 );
 import WakilPialangSection from "@/components/organisms/WakilPialangSection";
+import BeritaSection from "@/components/organisms/BeritaSection";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
@@ -41,30 +41,31 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 // Gunakan dynamic import untuk mencegah error SSR
 const DynamicWelcomeModal = dynamic(
   () => import('@/components/moleculs/SimpleWelcomeModal'),
-  { ssr: false }
+  { ssr: false, loading: () => null }
 );
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
+  const hasShownModal = useRef(false);
   
   useEffect(() => {
     // Pastikan kode ini hanya berjalan di client-side
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || hasShownModal.current) return;
     
-    // Tampilkan modal setelah 1 detik
-    const timer = setTimeout(() => {
-      // Tampilkan modal di semua perangkat untuk testing
-      // Nanti bisa diubah kembali ke pengecekan perangkat mobile
-      setShowModal(true);
+    // Cek apakah modal sudah pernah ditampilkan di session ini
+    const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
+    
+    if (!hasSeenModal) {
+      // Tampilkan modal setelah 1 detik
+      const timer = setTimeout(() => {
+        // Tampilkan modal di semua perangkat
+        setShowModal(true);
+        sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+        hasShownModal.current = true;
+      }, 1000);
       
-      // Kode asli untuk mengecek perangkat mobile:
-      // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      // if (isMobile) {
-      //   setShowModal(true);
-      // }
-    }, 1000);
-    
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const handleCloseModal = () => setShowModal(false);
