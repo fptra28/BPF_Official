@@ -7,6 +7,7 @@
     "nextWeek": "Minggu Depan"
   },
   "table": {
+    "date": "Tanggal",
     "time": "Waktu",
     "country": "Negara",
     "impact": "Dampak",

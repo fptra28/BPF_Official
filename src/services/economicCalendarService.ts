@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'https://portalnews.newsmaker.id/api/kalender-ekonomi';
+const API_URL = 'https://portalnews.newsmaker.id/api/v1/kalender-ekonomi';
+const TOKEN = 'BPF-91e516ac4fe2e8ae';
 
 export interface EconomicEvent {
   id: number;
@@ -30,7 +31,12 @@ export interface ApiResponse {
 
 export const fetchEconomicCalendar = async (): Promise<EconomicEvent[]> => {
   try {
-    const response = await axios.get<ApiResponse>(API_URL);
+    const response = await axios.get<ApiResponse>(API_URL, {
+      headers: {
+        'Authorization': `Bearer ${TOKEN}`
+      }
+    });
+    
     if (response.data.status === 'success') {
       return response.data.data;
     }
@@ -39,33 +45,4 @@ export const fetchEconomicCalendar = async (): Promise<EconomicEvent[]> => {
     console.error('Error fetching economic calendar:', error);
     throw error;
   }
-};
-
-export const filterEventsByDateRange = (
-  events: EconomicEvent[],
-  startDate: Date,
-  endDate: Date
-): EconomicEvent[] => {
-  return events.filter(event => {
-    const eventDate = new Date(event.date);
-    return eventDate >= startDate && eventDate <= endDate;
-  });
-};
-
-export const filterEventsByImpact = (
-  events: EconomicEvent[],
-  impact: string
-): EconomicEvent[] => {
-  if (!impact) return events;
-  return events.filter(event => event.impact.toLowerCase() === impact.toLowerCase());
-};
-
-export const filterEventsByCountry = (
-  events: EconomicEvent[],
-  country: string
-): EconomicEvent[] => {
-  if (!country) return events;
-  return events.filter(event => 
-    event.country.toLowerCase().includes(country.toLowerCase())
-  );
 };
