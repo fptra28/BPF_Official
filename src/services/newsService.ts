@@ -48,35 +48,46 @@ export interface NewsApiResponse {
   total: number;
 }
 
+const API_BASE_URL = 'https://portalnews.newsmaker.id/api/v1/berita';
+const API_TOKEN = 'BPF-91e516ac4fe2e8ae';
+
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+  const headers = new Headers(options.headers || {});
+  headers.set('Authorization', `Bearer ${API_TOKEN}`);
+  headers.set('Accept', 'application/json');
+  
+  const response = await fetch(url, {
+    ...options,
+    headers,
+    cache: 'no-store' as const
+  });
+  
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} on ${url}`);
+  }
+  
+  return response.json();
+};
+
 export const fetchLatestNews = async (limit = 3): Promise<NewsItem[]> => {
   try {
-    const response = await fetch(
-      `https://portalnews.newsmaker.id/api/berita?per_page=${limit}&sort_by=created_at&order=desc`
+    const data = await fetchWithAuth(
+      `${API_BASE_URL}?per_page=${limit}&sort_by=created_at&order=desc`
     );
     
-    if (!response.ok) {
-      throw new Error('Gagal mengambil berita terbaru');
-    }
-    
-    const data = await response.json();
-    
-    // Process each news item to prioritize BPF title and use 5th image when available
+    // Process each news item to prioritize BPF title and use 5th image (index 4)
     const processedData = data.data.map((item: NewsItem) => {
-      // For images, prefer the 5th image (index 4) if it exists, then 4th (index 3), else first (index 0)
+      // For images, we want to use the 5th image (index 4) if it exists
       let mainImage = null;
       if (item.images?.length > 4) {
         mainImage = item.images[4];
-      } else if (item.images?.length > 3) {
-        mainImage = item.images[3];
       } else if (item.images?.length > 0) {
-        mainImage = item.images[0];
+        mainImage = item.images[0]; // Fallback to first image if no 5th image
       }
       
       return {
         ...item,
-        // Use BPF title if available, fallback to EWF, then default title
-        title: item.titles?.bpf || item.titles?.ewf || item.title,
-        // If we have a main image, use it as the only image
+        title: item.titles?.bpf || item.titles?.ewf || item.title, // Use BPF title if available, fallback to EWF, then default
         images: mainImage ? [mainImage] : []
       };
     });
@@ -88,36 +99,31 @@ export const fetchLatestNews = async (limit = 3): Promise<NewsItem[]> => {
   }
 };
 
-export const fetchNews = async (page = 1, perPage = 9, sortBy = 'created_at', order = 'desc'): Promise<NewsApiResponse> => {
+export const fetchNews = async (
+  page = 1, 
+  perPage = 9, 
+  sortBy = 'created_at', 
+  order = 'desc'
+): Promise<NewsApiResponse> => {
   try {
-    const response = await fetch(
-      `https://portalnews.newsmaker.id/api/berita?page=${page}&per_page=${perPage}&sort_by=${sortBy}&order=${order}`
+    const data = await fetchWithAuth(
+      `${API_BASE_URL}?page=${page}&per_page=${perPage}&sort_by=${sortBy}&order=${order}`
     );
     
-    if (!response.ok) {
-      throw new Error('Gagal mengambil daftar berita');
-    }
-    
-    const data = await response.json();
-    
-    // Process each news item to prioritize BPF title and use 5th image when available
+    // Process each news item to prioritize BPF title and use 5th image (index 4)
     if (data.data && Array.isArray(data.data)) {
       data.data = data.data.map((item: NewsItem) => {
-        // For images, prefer the 5th image (index 4) if it exists, then 4th (index 3), else first (index 0)
+        // For images, we want to use the 5th image (index 4) if it exists
         let mainImage = null;
         if (item.images?.length > 4) {
           mainImage = item.images[4];
-        } else if (item.images?.length > 3) {
-          mainImage = item.images[3];
         } else if (item.images?.length > 0) {
-          mainImage = item.images[0];
+          mainImage = item.images[0]; // Fallback to first image if no 5th image
         }
         
         return {
           ...item,
-          // Use BPF title if available, fallback to EWF, then default title
-          title: item.titles?.bpf || item.titles?.ewf || item.title,
-          // If we have a main image, use it as the only image
+          title: item.titles?.bpf || item.titles?.ewf || item.title, // Use BPF title if available, fallback to EWF, then default
           images: mainImage ? [mainImage] : []
         };
       });
@@ -142,32 +148,21 @@ export const fetchFeaturedNews = async (limit = 3): Promise<NewsItem[]> => {
 
 export const fetchNewsDetail = async (slug: string): Promise<NewsItem | null> => {
   try {
-    const response = await fetch(
-      `https://portalnews.newsmaker.id/api/berita/${slug}`
-    );
-    
-    if (!response.ok) {
-      throw new Error('Berita tidak ditemukan');
-    }
-    
-    const result = await response.json();
+    const result = await fetchWithAuth(`${API_BASE_URL}/${slug}`);
     
     if (result.data) {
-      // For images, prefer the 5th image (index 4) if it exists, then 4th (index 3), else first (index 0)
+      // For images, we want to use the 5th image (index 4) if it exists
       let mainImage = null;
       if (result.data.images?.length > 4) {
         mainImage = result.data.images[4];
-      } else if (result.data.images?.length > 3) {
-        mainImage = result.data.images[3];
       } else if (result.data.images?.length > 0) {
-        mainImage = result.data.images[0];
+        mainImage = result.data.images[0]; // Fallback to first image if no 5th image
       }
       
-      // Update the data with BPF title (fallback to EWF then default) and processed images
+      // Update the data with BPF title and processed images
       result.data = {
         ...result.data,
         title: result.data.titles?.bpf || result.data.titles?.ewf || result.data.title,
-        // If we have a main image, use it as the only image
         images: mainImage ? [mainImage] : []
       };
     }
