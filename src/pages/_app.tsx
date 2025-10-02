@@ -12,7 +12,7 @@ function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { i18n } = useTranslation();
-  const { pathname, asPath, locale } = router;
+  const { locale } = router;
 
   // Handle loading state
   useEffect(() => {
@@ -30,11 +30,10 @@ function App({ Component, pageProps }: AppProps) {
     };
   }, [router]);
 
-  // Handle locale changes and URL consistency
+  // ✅ Handle locale changes (tanpa redirect manual)
   useEffect(() => {
     if (!router.isReady) return;
 
-    const currentPath = asPath;
     const currentLocale = locale || "id";
 
     // Simpan preferred-locale di localStorage
@@ -44,55 +43,7 @@ function App({ Component, pageProps }: AppProps) {
 
     // Update i18n language
     i18n.changeLanguage(currentLocale);
-
-    // Skip kalau path sudah sesuai
-    if (
-      currentLocale === "id" &&
-      !currentPath.startsWith("/id") &&
-      !currentPath.startsWith("/en")
-    )
-      return;
-
-    if (currentLocale !== "id" && currentPath.startsWith(`/${currentLocale}`))
-      return;
-
-    // Default locale (id), hapus prefix /id
-    if (
-      currentLocale === "id" &&
-      (currentPath.startsWith("/id/") || currentPath === "/id")
-    ) {
-      const newPath =
-        currentPath.replace(/^\/id(\/|$)/, "/") || "/";
-
-      if (newPath !== currentPath) {
-        router.replace(newPath, undefined, {
-          locale: "id",
-          shallow: true,
-        });
-      }
-      return;
-    }
-
-    // Non-default locale, pastikan prefix sesuai
-    if (currentLocale !== "id") {
-      const cleanPath = currentPath.startsWith("/id/")
-        ? currentPath.replace(/^\/id/, "")
-        : currentPath.startsWith("/")
-        ? currentPath
-        : `/${currentPath}`;
-
-      const newPath = `/${currentLocale}${
-        cleanPath === "/" ? "" : cleanPath
-      }`;
-
-      if (newPath !== currentPath) {
-        router.replace(newPath, undefined, {
-          locale: currentLocale,
-          shallow: true,
-        });
-      }
-    }
-  }, [router.isReady, locale, asPath, i18n, router]);
+  }, [router.isReady, locale, i18n]);
 
   // Handle loading screen
   useEffect(() => {

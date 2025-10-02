@@ -28,45 +28,29 @@ export default function LanguageSwitcher() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
-  const changeLanguage = async (newLocale: string) => {
+  const changeLanguage = (newLocale: string) => {
+    // Tutup dropdown
+    closeDropdown();
+    
+    // Jika locale sama, tidak perlu melakukan apa-apa
     if (newLocale === i18n.language) {
-      closeDropdown();
       return;
     }
     
-    const { asPath } = router;
-    const currentLocale = i18n.language;
-    
     // Dapatkan path saat ini tanpa locale prefix
-    let cleanPath = asPath;
-    if (currentLocale) {
-      const localeRegex = new RegExp(`^\/${currentLocale}(\/|$)`);
-      cleanPath = asPath.replace(localeRegex, '/') || '/';
-    }
+    const { asPath } = router;
+    const cleanPath = asPath.replace(/^\/(id|en)(\/|$)/, '/') || '/';
     
     // Buat path baru berdasarkan locale yang dipilih
-    let newPath = cleanPath;
-    if (newLocale !== 'id') {
-      newPath = `/${newLocale}${cleanPath === '/' ? '' : cleanPath}`;
-    }
+    const newPath = newLocale === 'id' 
+      ? cleanPath === '/' ? '/' : cleanPath
+      : `/${newLocale}${cleanPath === '/' ? '' : cleanPath}`;
     
-    // Pastikan path tidak diawali dengan double slash
-    newPath = newPath.replace(/^\/\//, '/');
+    console.log('Changing language to:', newLocale, 'Path:', newPath);
     
-    try {
-      // Update URL dengan locale baru
-      await router.push(
-        newPath,
-        undefined,
-        { locale: newLocale, scroll: false }
-      );
-      
-      // Update bahasa di i18n
-      await i18n.changeLanguage(newLocale);
-      closeDropdown();
-    } catch (error) {
-      console.error('Error changing language:', error);
-    }
+    // Gunakan window.location untuk navigasi langsung
+    // Ini mencegah masalah dengan router Next.js
+    window.location.href = newPath;
   };
 
   // Tampilkan loading sederhana di server
