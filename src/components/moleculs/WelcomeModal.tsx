@@ -16,21 +16,6 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose }) => {
         {/* Decorative elements */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#080031]/5 rounded-full -z-10"></div>
         <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-[#FF0000]/5 rounded-full -z-10"></div>
-        
-        {/* Logo */}
-        <div className="mb-6">
-          <div className="mx-auto w-32 h-32 p-2 bg-white rounded-xl shadow-md">
-            <div className="relative w-full h-full flex items-center justify-center">
-              <Image 
-                src="/assets/bpf-logo.png" 
-                alt="Bestprofit Futures" 
-                width={120}
-                height={96}
-                className="h-full w-auto object-contain"
-              />
-            </div>
-          </div>
-        </div>
 
         {/* Content */}
         <h1 className="text-2xl md:text-3xl font-bold text-[#080031] mb-4">
