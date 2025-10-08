@@ -10,7 +10,7 @@ import BeritaSection from "@/components/organisms/BeritaSection";
 import AboutUs from "@/components/organisms/AboutUs";
 import Iso from "@/components/organisms/Market";
 import Pengumuman from "@/components/organisms/Pengumuman";
-import WelcomeModal from "@/components/moleculs/WelcomeModal";
+import HomeWelcomeModal from "@/components/moleculs/HomeWelcomeModal";
 import WakilPialangSection from "@/components/organisms/WakilPialangSection";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
@@ -34,21 +34,32 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
-  // useEffect(() => {
-  //   // Nonaktifkan sementara modal welcome
-  //   setShowModal(true);
-  // }, []);
+  useEffect(() => {
+    // Set mounted to true after component mounts
+    setHasMounted(true);
+    
+    // Tampilkan modal setelah 1 detik
+    const timer = setTimeout(() => {
+      setShowModal(true);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleCloseModal = () => setShowModal(false);
+  
+  // Jangan render apapun sampai komponen selesai mount di client
+  if (!hasMounted) return null;
 
   return (
     <PageTemplate>
       <div className="fixed top-4 right-4 z-50">
       </div>
       
-      {/* Welcome Modal */}
-      <WelcomeModal isOpen={showModal} onClose={handleCloseModal} />
+      {/* Home Welcome Modal */}
+      <HomeWelcomeModal isOpen={showModal} onClose={handleCloseModal} />
 
       {/* Carousel */}
       <CarouselWithContent />
