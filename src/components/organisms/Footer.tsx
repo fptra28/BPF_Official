@@ -185,14 +185,14 @@ const Footer = () => {
 
                 {/* Bottom Bar */}
                 <div className="mt-12 pt-6 border-t border-gray-100">
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="flex justify-center">
                         <p 
-                            className="text-xs text-[#4C4C4C] whitespace-nowrap"
+                            className="text-xs text-[#4C4C4C] text-center"
                             dangerouslySetInnerHTML={{ 
                                 __html: copyright.replace('{{year}}', currentYear.toString())
                             }} 
                         />
-                        <div className="flex items-center gap-4">
+                        {/* <div className="flex items-center gap-4">
                             <a href="/syarat-ketentuan" className="text-xs text-[#4C4C4C] hover:text-[#FF0000] transition-colors whitespace-nowrap">
                                 {termsConditions}
                             </a>
@@ -204,7 +204,7 @@ const Footer = () => {
                             <a href="/disclaimer" className="text-xs text-[#4C4C4C] hover:text-[#FF0000] transition-colors whitespace-nowrap">
                                 {disclaimer}
                             </a>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
