@@ -35,10 +35,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    // Nonaktifkan sementara modal welcome
-    setShowModal(true);
-  }, []);
+  // useEffect(() => {
+  //   // Nonaktifkan sementara modal welcome
+  //   setShowModal(true);
+  // }, []);
 
   const handleCloseModal = () => setShowModal(false);
 
