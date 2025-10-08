@@ -127,7 +127,7 @@ export default function WakilPialangSection({
             >
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:border-[#FF0000]/20">
                 <div className="p-6">
-                  <div className="flex items-start">
+                  <div className="flex items-center">
                     <div className="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-lg bg-[#FF0000]/10 text-[#FF0000] mr-4 group-hover:bg-[#FF0000] group-hover:text-white transition-colors duration-300">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -142,7 +142,7 @@ export default function WakilPialangSection({
                         {t('viewAllText', 'Lihat daftar lengkap')}
                       </p>
                     </div>
-                    <div className="text-gray-300 group-hover:text-[#FF0000] transition-colors duration-300">
+                    <div className="flex items-center justify-center text-gray-300 group-hover:text-[#FF0000] transition-colors duration-300 ml-2">
                       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
