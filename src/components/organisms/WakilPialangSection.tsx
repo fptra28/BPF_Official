@@ -12,7 +12,6 @@ interface WakilPialangSectionProps {
 
 export default function WakilPialangSection({
   className = '',
-  limit = 6,
   showHeader = true
 }: WakilPialangSectionProps) {
   const { t } = useTranslation('wakil_pialang');
@@ -26,8 +25,8 @@ export default function WakilPialangSection({
       try {
         setIsLoading(true);
         const data = await fetchKategoriWakilPialang();
-        // Batasi jumlah data yang ditampilkan sesuai dengan limit
-        setKota(data.slice(0, limit));
+        // Menampilkan semua data tanpa batasan limit
+        setKota(data);
         setError(null);
       } catch (err) {
         console.error('Error loading kategori wakil pialang:', err);
@@ -38,7 +37,7 @@ export default function WakilPialangSection({
     };
 
     loadKota();
-  }, [limit]);
+  }, []);
 
   if (isLoading) {
     return (
@@ -49,13 +48,20 @@ export default function WakilPialangSection({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {showHeader && (
             <div className="text-center mb-12">
-              <div className="animate-pulse h-8 bg-[#080031]/5 rounded-full w-64 mx-auto mb-4"></div>
-              <div className="h-1 bg-gradient-to-r from-[#080031] to-[#FF0000] rounded-full w-24 mx-auto mb-6"></div>
-              <div className="h-5 bg-[#080031]/5 rounded w-1/2 mx-auto"></div>
+              <span className="inline-block px-4 py-1.5 text-sm font-medium text-[#080031] bg-[#080031]/5 rounded-full mb-4">
+                {t('pageSubtitle', 'Daftar Wilayah')}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#080031] mb-4">
+                {t('pageTitle')}
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-[#080031] to-[#FF0000] rounded-full mx-auto mb-6"></div>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                {t('pageDescription')}
+              </p>
             </div>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(limit)].map((_, index) => (
+            {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-all duration-300">
                 <div className="animate-pulse space-y-4">
                   <div className="h-6 bg-[#080031]/5 rounded w-3/4"></div>
