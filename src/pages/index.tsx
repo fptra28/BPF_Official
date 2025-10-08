@@ -32,15 +32,24 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 
+// Dynamic import untuk menghindari masalah SSR
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // useEffect(() => {
-  //   // Nonaktifkan sementara modal welcome
-  //   setShowModal(true);
-  // }, []);
+  useEffect(() => {
+    // Pastikan kode hanya berjalan di sisi client
+    setIsClient(true);
+    // Tampilkan modal setelah komponen di-mount
+    setShowModal(true);
+  }, []);
 
   const handleCloseModal = () => setShowModal(false);
+
+  // Pastikan komponen hanya di-render di sisi client
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <PageTemplate>
