@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface ModalPopupProps {
     isOpen: boolean;
@@ -7,76 +7,83 @@ interface ModalPopupProps {
 }
 
 export default function ModalPopup({ isOpen, onClose, children }: ModalPopupProps) {
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(isOpen);
+    const [isIOS, setIsIOS] = useState(false);
 
-    // Simpan posisi scroll saat membuka modal
-    const scrollY = React.useRef(0);
+    // Deteksi perangkat iOS
+    useEffect(() => {
+        const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        setIsIOS(isIOSDevice);
+    }, []);
+
+    // Handle close dengan debounce
+    const handleClose = useCallback(() => {
+        onClose();
+    }, [onClose]);
+
+    // Handle touch move untuk mencegah scroll di belakang modal di iOS
+    const handleTouchMove = useCallback((e: React.TouchEvent) => {
+        if (isIOS) {
+            e.preventDefault();
+        }
+    }, [isIOS]);
 
     useEffect(() => {
         if (isOpen) {
-            // Simpan posisi scroll saat ini
-            scrollY.current = window.scrollY;
-            
-            // Nonaktifkan scroll pada body
-            document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.top = `-${scrollY.current}px`;
-            document.body.style.width = '100%';
-            
             setVisible(true);
+            // Tambahkan class ke body untuk mencegah scroll
+            document.body.style.overflow = 'hidden';
+            // Untuk iOS
+            if (isIOS) {
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
         } else {
-            // Aktifkan kembali scroll pada body
-            document.body.style.overflow = 'unset';
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            
-            // Kembalikan posisi scroll
-            window.scrollTo(0, scrollY.current);
-            
             const timeout = setTimeout(() => {
                 setVisible(false);
+                // Kembalikan style body
+                document.body.style.overflow = '';
+                if (isIOS) {
+                    document.body.style.position = '';
+                    document.body.style.width = '';
+                }
             }, 300);
-            
             return () => clearTimeout(timeout);
         }
-    }, [isOpen]);
+    }, [isOpen, isIOS]);
 
     if (!visible) return null;
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-auto"
+            className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-3 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+            onClick={handleClose}
+            onTouchMove={isIOS ? handleTouchMove : undefined}
             style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                backdropFilter: 'blur(4px)',
-                WebkitBackdropFilter: 'blur(4px)'
+                WebkitOverflowScrolling: 'touch',
+                overflowY: 'auto',
+                position: 'fixed',
+                width: '100%',
+                height: '100%'
             }}
-            onClick={onClose}
         >
             <div
-                className="relative w-full max-w-md bg-white rounded-xl shadow-2xl transform transition-all duration-300"
+                className={`bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative transform transition-all duration-300 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                 onClick={(e) => e.stopPropagation()}
                 style={{
-                    maxHeight: '90vh',
-                    overflow: 'visible',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    margin: 'auto 0' // Pusatkan vertikal
+                    WebkitOverflowScrolling: 'touch',
+                    overflowY: 'auto',
+                    maxHeight: '90vh'
                 }}
             >
-                <div 
-                    className="flex-1 p-6 md:p-8"
-                    style={{
-                        overflow: 'visible',
-                        WebkitOverflowScrolling: 'touch',
-                        overscrollBehavior: 'contain',
-                        scrollbarWidth: 'none',
-                        msOverflowStyle: 'none'
-                    }}
+                <button
+                    className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl"
+                    onClick={onClose}
                 >
-                    {children}
-                </div>
+                    &times;
+                </button>
+                <div className="text-gray-700">{children}</div>
             </div>
         </div>
     );
