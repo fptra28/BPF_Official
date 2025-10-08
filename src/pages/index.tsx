@@ -1,6 +1,6 @@
 // Home
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import PageTemplate from "@/components/templates/PageTemplate";
@@ -36,18 +36,37 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const hasShownModal = useRef(false);
 
   useEffect(() => {
     // Pastikan kode hanya berjalan di sisi client
     setIsClient(true);
-    // Tampilkan modal setelah komponen di-mount
-    setShowModal(true);
-  }, []);
+    
+    // Cek apakah modal sudah pernah ditampilkan di session ini
+    const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
+    
+    // Tampilkan modal hanya jika belum pernah ditampilkan di session ini
+    if (!hasSeenModal && !hasShownModal.current) {
+      setShowModal(true);
+      hasShownModal.current = true;
+      sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+    }
+    
+    // Cleanup
+    return () => {
+      if (showModal) {
+        document.body.style.overflow = '';
+      }
+    };
+  }, [showModal]);
 
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    document.body.style.overflow = '';
+  };
 
   // Pastikan komponen hanya di-render di sisi client
-  if (!isClient) {
+  if (typeof window === 'undefined') {
     return null;
   }
 
