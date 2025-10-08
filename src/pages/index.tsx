@@ -1,6 +1,6 @@
 // Home
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import PageTemplate from "@/components/templates/PageTemplate";
@@ -32,39 +32,15 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 };
 
 
-// Dynamic import untuk menghindari masalah SSR
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const modalShown = useRef(false);
 
   useEffect(() => {
-    // Pastikan kode hanya berjalan di sisi client
-    setIsClient(true);
-    
-    // Tampilkan modal setiap kali komponen di-mount
-    if (!modalShown.current) {
-      setShowModal(true);
-      modalShown.current = true;
-    }
-    
-    // Cleanup
-    return () => {
-      if (showModal) {
-        document.body.style.overflow = '';
-      }
-    };
-  }, [showModal]);
+    // Nonaktifkan sementara modal welcome
+    setShowModal(true);
+  }, []);
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    document.body.style.overflow = '';
-  };
-
-  // Pastikan komponen hanya di-render di sisi client
-  if (typeof window === 'undefined') {
-    return null;
-  }
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <PageTemplate>
