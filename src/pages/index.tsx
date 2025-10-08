@@ -1,15 +1,15 @@
 // Home
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from "react";
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'next-i18next';
 import PageTemplate from "@/components/templates/PageTemplate";
 import CarouselWithContent from "@/components/organisms/CarouselWithContent";
 import ProdukContainer from "@/components/organisms/ProdukContainer";
 import BeritaSection from "@/components/organisms/BeritaSection";
 import AboutUs from "@/components/organisms/AboutUs";
 import Iso from "@/components/organisms/Market";
+import Pengumuman from "@/components/organisms/Pengumuman";
 import WelcomeModal from "@/components/moleculs/WelcomeModal";
 import WakilPialangSection from "@/components/organisms/WakilPialangSection";
 
@@ -35,20 +35,12 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    // Tampilkan modal hanya di perangkat non-iOS
-    // Periksa apakah kode berjalan di sisi klien
-    if (typeof window !== 'undefined') {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      
-      if (!isIOS) {
-        setShowModal(true);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Nonaktifkan sementara modal welcome
+  //   setShowModal(true);
+  // }, []);
 
-  const handleCloseModal = useCallback(() => setShowModal(false), []);
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <PageTemplate>
@@ -92,6 +84,10 @@ export default function HomePage() {
         </div>
 
         <hr className="border-gray-200" />
+
+        <div className="sm:px-6 md:px-10 lg:px-20 xl:px-36 2xl:px-52 my-5">
+          <Pengumuman showHeader={true} className="mx-auto px-4" />
+        </div>
       </div>
     </PageTemplate>
   );
