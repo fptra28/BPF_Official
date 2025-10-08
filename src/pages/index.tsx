@@ -36,20 +36,16 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const hasShownModal = useRef(false);
+  const modalShown = useRef(false);
 
   useEffect(() => {
     // Pastikan kode hanya berjalan di sisi client
     setIsClient(true);
     
-    // Cek apakah modal sudah pernah ditampilkan di session ini
-    const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
-    
-    // Tampilkan modal hanya jika belum pernah ditampilkan di session ini
-    if (!hasSeenModal && !hasShownModal.current) {
+    // Tampilkan modal setiap kali komponen di-mount
+    if (!modalShown.current) {
       setShowModal(true);
-      hasShownModal.current = true;
-      sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+      modalShown.current = true;
     }
     
     // Cleanup
