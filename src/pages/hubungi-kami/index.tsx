@@ -123,16 +123,16 @@ const OfficeCard = ({ office, isHeadOffice = false, t }: OfficeProps) => (
     <div className="space-y-2">
       <div className="flex items-start">
         <FaMapMarkerAlt className="text-[#FF0000] mt-0.5 mr-1.5 flex-shrink-0" size={14} />
-        <p className="whitespace-pre-line text-gray-700">{office.alamat}</p>
+        <p className="whitespace-pre-line text-black">{office.alamat}</p>
       </div>
-      <p className="text-gray-700">
+      <p className="text-black">
         <span className="font-medium">{t('phone')}:</span> {office.telepon}
       </p>
-      <p className="text-gray-700">
+      <p className="text-black">
         <span className="font-medium">{t('fax')}:</span> {office.fax}
       </p>
       {office.email && (
-        <p className="text-gray-700">
+        <p className="text-black">
           <span className="font-medium">{t('email')}:</span>{' '}
           <a href={`mailto:${office.email}`} className="text-[#FF0000] hover:underline">
             {office.email}
@@ -153,7 +153,7 @@ export default function HubungiKami() {
         
         {/* Head Office */}
         <div className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <h2 className="text-2xl font-bold text-black mb-4">
             {t('headOffice')}
           </h2>
           <OfficeCard office={kantorPusat} isHeadOffice t={t} />
@@ -163,22 +163,22 @@ export default function HubungiKami() {
 
         {/* Branch Offices */}
         <div className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
+          <h2 className="text-2xl font-bold text-black mb-6 border-b pb-2">
             {t('branchOffice')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {kantorCabang.map((cabang, index) => (
               <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{cabang.kota}</h3>
+                <h3 className="text-lg font-semibold text-black mb-2">{cabang.kota}</h3>
                 <div className="space-y-1 text-sm">
                   <div className="flex items-start">
                     <FaMapMarkerAlt className="text-[#FF0000] mt-0.5 mr-1.5 flex-shrink-0" size={14} />
-                    <p className="whitespace-pre-line text-gray-700">{cabang.alamat}</p>
+                    <p className="whitespace-pre-line text-black">{cabang.alamat}</p>
                   </div>
-                  <p className="text-gray-700">
+                  <p className="text-black">
                     <span className="font-medium">{t('phone')}:</span> {cabang.telepon}
                   </p>
-                  <p className="text-gray-700">
+                  <p className="text-black">
                     <span className="font-medium">{t('fax')}:</span> {cabang.fax}
                   </p>
                   <a 
@@ -197,10 +197,10 @@ export default function HubungiKami() {
 
         {/* Online Complaint */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">
+          <h3 className="text-xl font-bold text-black mb-4">
             {t('complaintTitle')}
           </h3>
-          <p className="text-gray-700 mb-4">
+          <p className="text-black mb-4">
             {t('complaintDescription')}
           </p>
           <a 
