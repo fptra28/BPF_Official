@@ -95,7 +95,7 @@ const Footer = () => {
                     <Icons.Warning className="mt-0.5" />
                     <div className="ml-3">
                         <h3 className="text-sm font-bold text-[#080031] mb-1">{warningTitle}</h3>
-                        <p className="text-xs text-[#4C4C4C] leading-relaxed">
+                        <p className="text-xs text-black leading-relaxed">
                             {warningMessage}
                         </p>
                     </div>
@@ -107,7 +107,7 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                     {/* Quick Links */}
                     <div className="md:col-span-2">
-                        <h3 className="text-sm font-bold text-[#080031] mb-4 uppercase tracking-wider border-b border-[#080031]/10 pb-2">{quickLinks}</h3>
+                        <h3 className="text-sm font-bold text-black mb-4 uppercase tracking-wider border-b border-[#080031]/10 pb-2">{quickLinks}</h3>
                         <ul className="space-y-3">
                             {[
                                 { icon: <Icons.Home />, text: t('home', 'Beranda'), href: '/' },
@@ -118,7 +118,7 @@ const Footer = () => {
                                     <Link 
                                         href={item.href} 
                                         locale={locale}
-                                        className="flex items-center text-sm text-[#4C4C4C] hover:text-[#FF0000] transition-colors"
+                                        className="flex items-center text-sm text-black hover:text-[#FF0000] transition-colors"
                                     >
                                         <span className="mr-2 text-[#FF0000] group-hover:translate-x-1 transition-transform">
                                             {item.icon}
@@ -132,18 +132,18 @@ const Footer = () => {
 
                     {/* Contact Info */}
                     <div className="md:col-span-4">
-                        <h3 className="text-sm font-bold text-[#080031] mb-4 uppercase tracking-wider border-b border-[#080031]/10 pb-2">{contactUs}</h3>
+                        <h3 className="text-sm font-bold text-black mb-4 uppercase tracking-wider border-b border-[#080031]/10 pb-2">{contactUs}</h3>
                         <div className="space-y-4">
                             <div className="flex group">
                                 <Icons.MapPin className="mt-0.5 flex-shrink-0" />
                                 <div className="ml-3">
-                                    <p className="text-sm font-medium text-[#080031] mb-1 group-hover:text-[#FF0000] transition-colors">{headOffice}</p>
-                                    <p className="text-sm text-[#4C4C4C] leading-relaxed">{address}</p>
+                                    <p className="text-sm font-medium text-black mb-1 group-hover:text-[#FF0000] transition-colors">{headOffice}</p>
+                                    <p className="text-sm text-black leading-relaxed">{address}</p>
                                 </div>
                             </div>
                             <div className="flex items-center group">
                                 <Icons.Phone />
-                                <a href="tel:+622129035005" className="ml-3 text-sm text-[#4C4C4C] hover:text-[#FF0000] transition-colors">
+                                <a href="tel:+622129035005" className="ml-3 text-sm text-black hover:text-[#FF0000] transition-colors">
                                 +62 21 2903 5005
                                 </a>
                             </div>
@@ -151,7 +151,7 @@ const Footer = () => {
                                 <Icons.Envelope />
                                 <a 
                                     href="mailto:corporate@bestprofit-futures.co.id" 
-                                    className="ml-3 text-sm text-[#4C4C4C] hover:text-[#FF0000] transition-colors break-all"
+                                    className="ml-3 text-sm text-black hover:text-[#FF0000] transition-colors break-all"
                                 >
                                     corporate@bestprofit-futures.co.id
                                 </a>
@@ -161,7 +161,7 @@ const Footer = () => {
 
                     {/* Legal Info */}
                     <div className="md:col-span-6">
-                        <h3 className="text-sm font-bold text-[#080031] mb-4 uppercase tracking-wider border-b border-[#080031]/10 pb-2">{legal}</h3>
+                        <h3 className="text-sm font-bold text-black mb-4 uppercase tracking-wider border-b border-[#080031]/10 pb-2">{legal}</h3>
                         <div className="flex flex-wrap gap-4">
                             <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm flex-1 min-w-[200px] hover:border-[#FF0000]/30 hover:shadow-md transition-all duration-300">
                                 <img 
@@ -169,7 +169,7 @@ const Footer = () => {
                                     alt="Kementerian Komunikasi dan Informatika" 
                                     className="h-10 w-auto object-contain mb-2 mx-auto"
                                 />
-                                <p className="text-xs text-center text-[#4C4C4C]">{komdigiDesc}</p>
+                                <p className="text-xs text-center text-black">{komdigiDesc}</p>
                             </div>
                             <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm flex-1 min-w-[200px] hover:border-[#FF0000]/30 hover:shadow-md transition-all duration-300">
                                 <img 
@@ -177,7 +177,7 @@ const Footer = () => {
                                     alt="ISO 9001:2015 Certified" 
                                     className="h-10 w-auto object-contain mb-2 mx-auto"
                                 />
-                                <p className="text-xs text-center text-[#4C4C4C]">{isoDesc}</p>
+                                <p className="text-xs text-center text-black">{isoDesc}</p>
                             </div>
                         </div>
                     </div>
@@ -187,7 +187,7 @@ const Footer = () => {
                 <div className="mt-12 pt-6 border-t border-gray-100">
                     <div className="flex justify-center">
                         <p 
-                            className="text-xs text-[#4C4C4C] text-center"
+                            className="text-xs text-black text-center"
                             dangerouslySetInnerHTML={{ 
                                 __html: copyright.replace('{{year}}', currentYear.toString())
                             }} 
