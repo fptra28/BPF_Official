@@ -38,7 +38,6 @@ const baseMenuItems: NavItem[] = [
           { key: "about_achievements_certificates", label: "Sertifikat", href: "/profil/pencapaian/sertifikat" },
         ],
       },
-      { key: "about_contact", label: "Kontak", href: "/hubungi-kami" },
       {
         key: "about_general",
         label: "Umum",
@@ -47,6 +46,7 @@ const baseMenuItems: NavItem[] = [
           { key: "about_general_videos", label: "Video", href: "/umum/video" },
         ],
       },
+      { key: "about_contact", label: "Kontak", href: "/hubungi-kami" },
     ],
   },
   {
