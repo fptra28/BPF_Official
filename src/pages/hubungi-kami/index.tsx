@@ -122,7 +122,7 @@ const OfficeCard = ({ office, isHeadOffice = false, t }: OfficeProps) => (
     )}
     <div className="space-y-2">
       <div className="flex items-start">
-        <FaMapMarkerAlt className="text-blue-600 mt-0.5 mr-1.5 flex-shrink-0" size={14} />
+        <FaMapMarkerAlt className="text-[#FF0000] mt-0.5 mr-1.5 flex-shrink-0" size={14} />
         <p className="whitespace-pre-line text-gray-700">{office.alamat}</p>
       </div>
       <p className="text-gray-700">
@@ -134,7 +134,7 @@ const OfficeCard = ({ office, isHeadOffice = false, t }: OfficeProps) => (
       {office.email && (
         <p className="text-gray-700">
           <span className="font-medium">{t('email')}:</span>{' '}
-          <a href={`mailto:${office.email}`} className="text-blue-600 hover:underline">
+          <a href={`mailto:${office.email}`} className="text-[#FF0000] hover:underline">
             {office.email}
           </a>
         </p>
@@ -172,7 +172,7 @@ export default function HubungiKami() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">{cabang.kota}</h3>
                 <div className="space-y-1 text-sm">
                   <div className="flex items-start">
-                    <FaMapMarkerAlt className="text-blue-600 mt-0.5 mr-1.5 flex-shrink-0" size={14} />
+                    <FaMapMarkerAlt className="text-[#FF0000] mt-0.5 mr-1.5 flex-shrink-0" size={14} />
                     <p className="whitespace-pre-line text-gray-700">{cabang.alamat}</p>
                   </div>
                   <p className="text-gray-700">
@@ -185,7 +185,7 @@ export default function HubungiKami() {
                     href={cabang.mapLink} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-blue-600 hover:underline text-xs mt-1"
+                    className="inline-flex items-center text-[#FF0000] hover:underline text-xs mt-1"
                   >
                     {t('viewOnMap', 'Lihat di Peta')} <FaExternalLinkAlt className="ml-1" size={10} />
                   </a>
