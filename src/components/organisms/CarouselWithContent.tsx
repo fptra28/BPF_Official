@@ -53,9 +53,9 @@ const defaultBanners: Banner[] = [
 ];
 
 const CTA_ITEMS = [
-    { label: "Daftar Sekarang", link: "https://regol.kontak-perkasa-futures.co.id/" },
-    { label: "Demo", link: "https://demo.kontakperkasafutures.com/login" },
-    { label: "Live", link: "https://etrade.kontakperkasafutures.com/login" },
+    { label: "Daftar Sekarang", link: "https://regol.bestprofit-futures.co.id/" },
+    { label: "Demo", link: "https://demo.bestprofit-futures.com/login" },
+    { label: "Live", link: "https://etrade.bestprofit-futures.com/login" },
 ];
 
 export default function CarouselWithContent() {
