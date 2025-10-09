@@ -1,46 +1,34 @@
 // Sample data sebagai fallback jika API eksternal bermasalah
 const sampleData = [
   {
-    symbol: "DJIA",
-    last: 34500.23,
-    high: 34600.50,
-    low: 34300.75,
-    open: 34450.00,
-    time: new Date().toISOString(),
-    prevClose: 34450.00,
-    valueChange: 50.23,
-    percentChange: 0.15,
-    Volume: 0,
-    bid: 34500.00,
-    ask: 34500.50
+    symbol: "Gold",
+    last: 4037.75,
+    high: 4041.23,
+    low: 4001.8,
+    open: 4020.8,
+    prevClose: 4040.4,
+    valueChange: -2.65,
+    percentChange: -0.07
+  },
+  {
+    symbol: "Silver",
+    last: 49.109,
+    high: 49.133,
+    low: 48.498,
+    open: 49.002,
+    prevClose: 48.842,
+    valueChange: 0.267,
+    percentChange: 0.55
   },
   {
     symbol: "USD/IDR",
-    last: 14500.50,
-    high: 14520.75,
-    low: 14480.25,
-    open: 14500.00,
-    time: new Date().toISOString(),
-    prevClose: 14495.00,
-    valueChange: 5.50,
-    percentChange: 0.04,
-    Volume: 0,
-    bid: 14500.25,
-    ask: 14500.75
-  },
-  {
-    symbol: "EUR/USD",
-    last: 1.0925,
-    high: 1.0930,
-    low: 1.0910,
-    open: 1.0920,
-    time: new Date().toISOString(),
-    prevClose: 1.0918,
-    valueChange: 0.0007,
-    percentChange: 0.06,
-    Volume: 0,
-    bid: 1.0924,
-    ask: 1.0926
+    last: 16528,
+    high: 16574,
+    low: 16496,
+    open: 16574,
+    prevClose: 16575,
+    valueChange: -47,
+    percentChange: -0.28
   }
 ];
 
@@ -48,7 +36,7 @@ export default async function handler(req, res) {
   try {
     // Coba ambil data dari API eksternal
     const response = await fetch(
-      "https://www.newsmaker.id/quotes/live?s=LGD+LSI+GHSIK5+SN1M5+LCOPN5+DJIA+DAX+DX+AUDUSD+EURUSD+GBPUSD+CHF+JPY+RP",
+      "https://endpoapi-production-3202.up.railway.app/api/quotes",
       {
         headers: {
           'Accept': 'application/json',
@@ -56,8 +44,8 @@ export default async function handler(req, res) {
           'Pragma': 'no-cache',
           'Expires': '0'
         },
-        // Timeout setelah 3 detik
-        signal: AbortSignal.timeout(3000)
+        // Timeout setelah 5 detik
+        signal: AbortSignal.timeout(5000)
       }
     );
     
@@ -65,38 +53,22 @@ export default async function handler(req, res) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const text = await response.text();
-    let data;
+    const responseData = await response.json();
     
-    try {
-      // Coba parse JSON langsung
-      data = JSON.parse(text);
-    } catch (parseError) {
-      // Jika gagal, coba bersihkan response
-      const cleanedText = text
-        .replace(/\s+/g, '') // Hapus spasi
-        .replace(/,,/g, ',')  // Perbaiki koma ganda
-        .replace(/,]/g, ']')  // Hapus koma sebelum penutup array
-        .replace(/},,/g, '},') // Perbaiki koma ganda antar objek
-        .replace(/}{/g, '},{') // Tambahkan koma yang hilang
-        .replace(/}\]/g, '}]'); // Perbaiki format penutup
-      
-      try {
-        data = JSON.parse(cleanedText);
-      } catch (e) {
-        // Jika masih gagal, gunakan sample data
-        console.error('Failed to parse API response, using sample data');
-        return res.status(200).json(sampleData);
-      }
+    // Pastikan data ada dan dalam format yang diharapkan
+    if (!responseData || !Array.isArray(responseData.data)) {
+      console.error('Invalid API response format, using sample data');
+      return res.status(200).json(sampleData);
     }
     
-    // Proses data
-    const dataArray = Array.isArray(data) ? data : [data];
+    // Ambil data dari response
+    const data = responseData.data;
     
-    const validItems = dataArray
+    // Proses data
+    const validItems = data
       .filter(item => item && item.symbol)
       .map(item => ({
-        symbol: String(item.symbol || ''),
+        symbol: String(item.symbol || '').replace('USD/IDR', 'IDR'), // Sesuaikan format symbol
         last: Number(item.last) || 0,
         high: Number(item.high) || 0,
         low: Number(item.low) || 0,
