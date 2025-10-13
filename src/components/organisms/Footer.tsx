@@ -72,7 +72,7 @@ const Footer = () => {
     const headOffice = t('headOffice', 'Kantor Pusat');
     const address = t('address', 'Equity Tower Lt. 47, Kawasan Niaga Terpadu Sudirman (SCBD) Jl. Jend. Sudirman Kav. 52-53 Jakarta 12190');
     const komdigiDesc = t('komdigiDesc', 'Terdaftar dan diawasi oleh Kementerian Komunikasi dan Informatika Republik Indonesia');
-    const isoDesc = t('isoDesc', 'Bersertifikat ISO 9001:2015');
+    const isoDesc = t('isoDesc', 'Bersertifikat ISO');
     const copyright = t('copyright', '&copy; {{year}} PT. BestProfit Futures. All rights reserved.');
     const termsConditions = t('termsConditions', 'Syarat & Ketentuan');
     const privacyPolicy = t('privacyPolicy', 'Kebijakan Privasi');
@@ -174,7 +174,7 @@ const Footer = () => {
                             <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm flex-1 min-w-[200px] hover:border-[#FF0000]/30 hover:shadow-md transition-all duration-300">
                                 <img 
                                     src="/assets/iso_tsi.png" 
-                                    alt="ISO 9001:2015 Certified" 
+                                    alt="ISO Certified" 
                                     className="h-10 w-auto object-contain mb-2 mx-auto"
                                 />
                                 <p className="text-xs text-center text-black">{isoDesc}</p>
