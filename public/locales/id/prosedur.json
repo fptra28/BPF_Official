@@ -109,7 +109,7 @@
   
   "ilustrasiTransaksi": {
     "title": "Ilustrasi Transaksi",
-    "description": "Untuk Anda yang ingin melakukan investasi dengan produk-produk dari PT. KONTAKPERKASA FUTURES, Anda dapat melihat ilustrasi transaksi dibawah ini, guna untuk mempertimbangkan lebih dalam lagi apakah Anda yakin dalam hal ini:",
+    "description": "Untuk Anda yang ingin melakukan investasi dengan produk-produk dari PT. BestProfit Futures, Anda dapat melihat ilustrasi transaksi dibawah ini, guna untuk mempertimbangkan lebih dalam lagi apakah Anda yakin dalam hal ini:",
     "rumusPerhitungan": {
       "title": "Rumus Perhitungan Transaksi",
       "formula": "[(Harga Jual – Harga Beli) x Nilai Kontrak x n Lot] – [(Biaya Fasilitas + PPN) x n Lot]",
@@ -326,7 +326,7 @@
   "petunjukTransaksi": {
     "title": "PETUNJUK TRANSAKSI",
     "description": "Nasabah dapat menyampaikan amanat secara online dan atau melalui telepon (dianjurkan nasabah melakukan simulasi terlebih dulu sebelum menggunakan real online trading).",
-    "description2": "Nasabah yang menyampaikan amanat secara online akan memperoleh User ID dan Password dari PT. Equityworld Futures.",
+    "description2": "Nasabah yang menyampaikan amanat secara online akan memperoleh User ID dan Password dari PT. BestProfit Futures.",
     "onlineRequirements": "Untuk melakukan transaksi secara online, harus terpenuhi antara lain:",
     "requirements": [
       "Tersedia Jaringan Internet",
@@ -337,7 +337,7 @@
           "text": "http://etrade.ew-futures.com/login.php"
         }
       },
-      "Nasabah sudah mempunyai User ID dan Password dari PT. Equityworld Futures (Password dapat diganti oleh nasabah)"
+      "Nasabah sudah mempunyai User ID dan Password dari PT. BestProfit Futures (Password dapat diganti oleh nasabah)"
     ],
     "note": "Catatan: Untuk setiap transaksi, nasabah hanya dapat membeli atau menjual maksimum 50 lot.",
     "attention": {
