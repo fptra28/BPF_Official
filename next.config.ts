@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import nextI18nConfig from './next-i18next.config';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   i18n: {
     ...nextI18nConfig.i18n,
     localeDetection: false, // sudah pas
