@@ -8,9 +8,17 @@ const nextConfig: NextConfig = {
     localeDetection: false, // sudah pas
   },
   trailingSlash: false,
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://bpf-admin.newsmaker.id',
+   env: {
+    NEXT_PUBLIC_API_BASE_URL:
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "https://bpf-admin.newsmaker.id",
+    // kalau mau sekalian alias lama:
+    NEXT_PUBLIC_API_URL:
+      process.env.NEXT_PUBLIC_API_URL ||
+      process.env.NEXT_PUBLIC_API_BASE_URL ||
+      "https://bpf-admin.newsmaker.id",
   },
+ 
   reactStrictMode: true,
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
