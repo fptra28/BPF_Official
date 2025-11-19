@@ -65,7 +65,7 @@ const Footer = () => {
 
     // Fallback values untuk semua terjemahan
     const warningTitle = t('warningTitle', 'PERHATIAN');
-    const warningMessage = t('warningMessage', 'Manajemen PT. BestProfit Futures menghimbau kepada seluruh masyarakat untuk lebih berhati-hati terhadap beberapa bentuk penipuan yang berkedok investasi mengatasnamakan PT. BestProfit Futures dengan menggunakan media elektronik ataupun sosial media. Untuk itu harus dipastikan bahwa transfer dana ke rekening tujuan (Segregated Account) guna melaksanakan transaksi Perdagangan Berjangka adalah atas nama PT Equityworld Futures, bukan atas nama individu.');
+    const warningMessage = t('warningMessage', 'Manajemen PT. BestProfit Futures menghimbau kepada seluruh masyarakat untuk lebih berhati-hati terhadap beberapa bentuk penipuan yang berkedok investasi mengatasnamakan PT. BestProfit Futures dengan menggunakan media elektronik ataupun sosial media. Untuk itu harus dipastikan bahwa transfer dana ke rekening tujuan (Segregated Account) guna melaksanakan transaksi Perdagangan Berjangka adalah atas nama PT. BestProfit Futures, bukan atas nama individu.');
     const quickLinks = t('quickLinks', 'Tautan Cepat');
     const contactUs = t('contactUs', 'Kontak Kami');
     const legal = t('legal', 'Legalitas');
