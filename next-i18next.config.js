@@ -14,7 +14,7 @@ module.exports = {
     'informasi', 'profil_perusahaan', 'market', 'pengumuman',
     'welcome', 'legalitas_bisnis', 'wakil_pialang', 'badan_regulasi',
     'fasilitas_layanan', 'penghargaan', 'sertifikat', 'video',
-    'symbol-indeks', 'loco-london-gold', 'hubungi-kami', 'summer-winter',
+    'symbol-indeks', 'loco-london-gold', 'hubungi-kami', 'ilustrasi-transaksi', 'summer-winter',
     'economic-calendar', 'historical-data', 'mekanisme-perdagangan',
     'pivot-fibonacci', 'prosedur', 'header', 'analisis'
   ],
