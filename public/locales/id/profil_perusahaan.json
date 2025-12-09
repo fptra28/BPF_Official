@@ -4,18 +4,19 @@
   "description": "PT Bestprofit Futures (\"BPF\") adalah perusahaan pialang berjangka resmi yang telah terdaftar dan berada di bawah pengawasan Badan Pengawas Perdagangan Berjangka Komoditi (BAPPEBTI) sejak tahun 2004. Sebagai anggota PT Bursa Berjangka Jakarta (JFX) dan PT Kliring Berjangka Indonesia (KBI), BPF berkomitmen menyediakan layanan perdagangan berjangka yang transparan, aman, dan profesional.\nDengan jaringan 12 kantor operasional di berbagai kota besar di Indonesia, BPF hadir lebih dekat untuk melayani kebutuhan nasabah. Didukung pengalaman panjang serta infrastruktur yang kuat, BPF terus berupaya menjadi mitra terbaik bagi masyarakat dalam mengakses peluang perdagangan berjangka di Indonesia.",
   "sections": {
     "legal": {
-      "title": "Legal & Keanggotaan",
+      "title": "LEGALITAS & KEANGGOTAAN",
       "items": [
-        "Terdaftar dan Diawasi BAPPEBTI sejak 2004",
+        "Terdaftar dan di awasi oleh BAPPEBTI, OJK & Bank Indonesia",
         "Anggota PT Bursa Berjangka Jakarta (JFX)",
-        "Anggota PT Kliring Berjangka Indonesia (Persero)"
+        "Anggota PT Kliring Berjangka Indonesia (Persero)",
+        "Anggota Asosiasi Perdagangan Berjangka Indonesia (ASPEBTINDO)"
       ]
     },
     "offices": {
       "title": "Jaringan Kantor Operasional",
       "cities": [
-        "Jakarta",
-        "Jakarta",
+        "Jakarta (Pusat) Equity Tower SCBD",
+        "Jakarta (Cabang) One Pacific Place SCBD",
         "Bandung",
         "Semarang",
         "Surabaya",

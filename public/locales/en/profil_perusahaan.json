@@ -4,18 +4,19 @@
   "description": "PT Bestprofit Futures (\"BPF\") is an official futures brokerage company that has been registered and supervised by the Commodity Futures Trading Regulatory Agency (BAPPEBTI) since 2004. As a member of the Jakarta Futures Exchange (JFX) and the Indonesia Clearing House (KBI), BPF is committed to providing transparent, secure, and professional futures trading services.\nWith a network of 12 operational offices across major cities in Indonesia, BPF is able to serve customers more closely. Supported by extensive experience and robust infrastructure, BPF continues to strive to be a trusted partner for the public in accessing futures trading opportunities in Indonesia.",
   "sections": {
     "legal": {
-      "title": "Legal & Membership",
+      "title": "LEGALITY & MEMBERSHIP",
       "items": [
-        "Registered and supervised by BAPPEBTI since 2004",
+        "Registered and supervised by BAPPEBTI, OJK & Bank Indonesia",
         "Member of Jakarta Futures Exchange (JFX)",
-        "Member of Indonesia Clearing House (KBI - Persero)"
+        "Member of Indonesia Clearing House (KBI - Persero)",
+        "Member of the Indonesian Futures Trading Association (ASPEBTINDO)"
       ]
     },
     "offices": {
       "title": "Operational Office Network",
       "cities": [
-        "Jakarta",
-        "Jakarta",
+        "Jakarta (Central) Equity Tower SCBD",
+        "Jakarta (Branch) One Pacific Place SCBD",
         "Bandung",
         "Semarang",
         "Surabaya",
