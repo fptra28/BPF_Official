@@ -28,7 +28,7 @@ const baseMenuItems: NavItem[] = [
       { key: "about_companyProfile", label: "Profil Perusahaan", href: "/profil/perusahaan" },
       { key: "about_businessLicense", label: "Legalitas Bisnis", href: "/profil/legalitas-bisnis" },
       { key: "about_brokerRepresentative", label: "Wakil Pialang", href: "/profil/wakil-pialang" },
-      { key: "about_regulatoryBody", label: "Badan Regulasi", href: "/profil/badan-regulasi" },
+      { key: "about_regulatoryBody", label: "Kelembagaan", href: "/profil/badan-regulasi" },
       { key: "about_facilitiesServices", label: "Fasilitas & Layanan", href: "/umum/fasilitas-layanan" },
       {
         key: "about_achievements",
