@@ -95,7 +95,7 @@ const Footer = () => {
                     <Icons.Warning className="mt-0.5" />
                     <div className="ml-3">
                         <h3 className="text-sm font-bold text-[#080031] mb-1">{warningTitle}</h3>
-                        <p className="text-xs text-black leading-relaxed">
+                        <p className="text-xs text-black leading-relaxed whitespace-pre-line">
                             {warningMessage}
                         </p>
                     </div>
