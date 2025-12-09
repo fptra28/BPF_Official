@@ -81,9 +81,11 @@ export default function ProfilPerusahaan() {
       <div className="px-4 sm:px-8 md:px-12 lg:px-20 xl:px-52 my-10">
         <ProfilContainer title={t('headerTitle')}>
           {/* Deskripsi Perusahaan */}
-          <section className="mb-8">
-            <p className="text-lg leading-relaxed text-[#080031]/90">{t('description')}</p>
-          </section>
+         <section className="mb-8">
+            <p className="text-lg leading-relaxed text-[#080031]/90 whitespace-pre-line">
+              {t('description')}
+            </p>
+         </section>
           {/* Highlight Cards */}
           <section className="grid md:grid-cols-2 gap-6 md:gap-8">
             {/* Legal & Membership */}
