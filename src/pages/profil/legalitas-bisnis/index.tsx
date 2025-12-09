@@ -27,10 +27,10 @@ export default function LegalitasBisnis() {
         <ProfilContainer title={t('pageTitle')}>
           {/* Heading */}
           <div className="mb-8">
-            <span className="inline-flex items-center w-fit px-4 py-2 text-xs font-bold tracking-wide uppercase text-[#080031] bg-[#FF0000]/10 rounded-full">
+            {/* <span className="inline-flex items-center w-fit px-4 py-2 text-xs font-bold tracking-wide uppercase text-[#080031] bg-[#FF0000]/10 rounded-full">
               <span className="w-2 h-2 bg-[#FF0000] rounded-full mr-2"></span>
               {t('importantNotice.title')}
-            </span>
+            </span> */}
           </div>
 
           {/* Legalitas Items */}
