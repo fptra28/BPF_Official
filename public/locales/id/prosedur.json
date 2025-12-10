@@ -323,26 +323,26 @@
     ]
   },
   
-  "petunjukTransaksi": {
-    "title": "PETUNJUK TRANSAKSI",
-    "description": "Nasabah dapat menyampaikan amanat secara online dan atau melalui telepon (dianjurkan nasabah melakukan simulasi terlebih dulu sebelum menggunakan real online trading).",
-    "description2": "Nasabah yang menyampaikan amanat secara online akan memperoleh User ID dan Password dari PT. BestProfit Futures.",
-    "onlineRequirements": "Untuk melakukan transaksi secara online, harus terpenuhi antara lain:",
+    "petunjukTransaksi": {
+    "title": "PETUNJUK PELAKSANAAN TRANSAKSI",
+    "description": "Nasabah dapat menyampaikan amanat transaksi secara online maupun melalui telepon, dengan dianjurkan melakukan simulasi terlebih dahulu sebelum menggunakan akun real.",
+    "onlineRequirements": "Persiapan untuk Transaksi Online:",
     "requirements": [
-      "Tersedia Jaringan Internet",
+      "Memiliki jaringan internet yang stabil.",
       {
-        "text": "Akses ke",
+        "text": "Mengakses platform melalui:",
         "link": {
-          "url": "http://etrade.ew-futures.com/login.php",
-          "text": "http://etrade.ew-futures.com/login.php"
+          "url": "https://etrade.bestprofit-futures.com/login ",
+          "text": "https://etrade.bestprofit-futures.com/login "
         }
       },
-      "Nasabah sudah mempunyai User ID dan Password dari PT. BestProfit Futures (Password dapat diganti oleh nasabah)"
+      "Memiliki User ID dan Password dari PT BestProfit Futures. Password dapat diganti oleh nasabah sesuai kebutuhan."
     ],
-    "note": "Catatan: Untuk setiap transaksi, nasabah hanya dapat membeli atau menjual maksimum 50 lot.",
+    "description2": "Setelah memiliki akun, nasabah dapat melakukan transaksi secara fleksibel dan real-time melalui platform online dengan dukungan sistem yang aman dan efisien.",
+    "note": "Catatan: Disarankan nasabah melakukan simulasi terlebih dahulu sebelum bertransaksi menggunakan akun real.",
     "attention": {
       "title": "Perhatian:",
-      "content": "Nasabah wajib membaca dan memahami beberapa ketentuan di dalam online trading yang dipaparkan di halaman pembuka. Jika nasabah masuk ke dalam sistem online (login) dan melakukan transaksi, berarti nasabah bersangkutan menerima seluruh konsekuensi yang ada berkaitan dengan transaksi tersebut."
+      "content": "Nasabah wajib membaca dan memahami ketentuan yang tercantum pada sistem online trading. Dengan masuk (login) dan melakukan transaksi, nasabah dianggap telah menyetujui seluruh konsekuensi yang berkaitan dengan transaksi tersebut."
     }
   }
 }

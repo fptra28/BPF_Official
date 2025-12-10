@@ -25,18 +25,21 @@ export default function PetunjukTransaksi() {
   const requirements = t('petunjukTransaksi.requirements', { returnObjects: true }) as (string | RequirementItem)[];
 
   return (
-    <PageTemplate title={t('petunjukTransaksi.title', 'Petunjuk Transaksi')}>
+    <PageTemplate title={t('petunjukTransaksi.title', 'Petunjuk Pelaksanaan Transaksi')}>
       <div className="px-4 sm:px-8 md:px-12 lg:px-20 xl:px-52 my-10">
-        <ProfilContainer title={t('petunjukTransaksi.title', 'Petunjuk Transaksi')}>
+        <ProfilContainer title={t('petunjukTransaksi.title', 'Petunjuk Pelaksanaan Transaksi')}>
           <div className="space-y-6 text-black text-sm sm:text-base leading-relaxed">
-            <p className="text-justify">{t('petunjukTransaksi.description')}</p>
-            <p className="text-justify">{t('petunjukTransaksi.description2')}</p>
-            
+            {/* Paragraf pembuka */}
+            <p className="text-justify">
+              {t('petunjukTransaksi.description')}
+            </p>
+
+            {/* Persiapan transaksi online + list */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-black">
                 {t('petunjukTransaksi.onlineRequirements')}
               </h3>
-              
+
               <ul className="space-y-3 pl-2">
                 {requirements.map((item, index) => (
                   <li key={index} className="flex items-start">
@@ -64,6 +67,11 @@ export default function PetunjukTransaksi() {
                 ))}
               </ul>
             </div>
+
+            {/* Kalimat penutup: Setelah memiliki akun... */}
+            <p className="text-justify">
+              {t('petunjukTransaksi.description2')}
+            </p>
           </div>
         </ProfilContainer>
       </div>

@@ -337,26 +337,26 @@
     ]
   },
   
-  "petunjukTransaksi": {
-    "title": "TRADING INSTRUCTIONS",
-    "description": "Clients can submit orders online or via telephone (it is recommended that clients conduct simulations first before using real online trading).",
-    "description2": "Clients who submit orders online will receive a User ID and Password from PT. BestProfit Futures.",
-    "onlineRequirements": "To conduct online transactions, the following requirements must be met:",
+    "petunjukTransaksi": {
+    "title": "TRANSACTION GUIDELINES",
+    "description": "Clients can place trading orders online or via telephone, and are strongly advised to conduct a simulation first before using a real account.",
+    "description2": "Once the account has been created, clients can trade flexibly and in real time through the online platform, supported by a secure and efficient system.",
+    "onlineRequirements": "Preparation for Online Transactions:",
     "requirements": [
-      "Internet Connection Available",
+      "Have a stable internet connection.",
       {
-        "text": "Access to",
+        "text": "Access the platform via:",
         "link": {
-          "url": "http://etrade.ew-futures.com/login.php",
-          "text": "http://etrade.ew-futures.com/login.php"
+          "url": "https://etrade.bestprofit-futures.com/login",
+          "text": "https://etrade.bestprofit-futures.com/login"
         }
       },
-      "Client already has a User ID and Password from PT. BestProfit Futures (Password can be changed by the client)"
+      "Have a User ID and Password from PT BestProfit Futures. The password can be changed by the client as needed."
     ],
-    "note": "Note: For each transaction, clients can only buy or sell a maximum of 50 lots.",
+    "note": "Note: Clients are advised to conduct a simulation first before trading with a real account.",
     "attention": {
       "title": "Attention:",
-      "content": "Clients are required to read and understand the terms and conditions of online trading presented on the opening page. If a client logs into the online system and conducts transactions, it means the client accepts all consequences related to such transactions."
+      "content": "Clients must read and understand the terms and conditions stated in the online trading system. By logging in and executing transactions, clients are deemed to have agreed to all consequences related to such transactions."
     }
   }
 }
