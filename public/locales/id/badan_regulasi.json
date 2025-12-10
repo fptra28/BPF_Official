@@ -1,21 +1,47 @@
 {
   "pageTitle": "Badan Regulasi",
   "pageDescription": "Informasi tentang badan regulasi yang mengawasi kegiatan perdagangan berjangka",
-  "profile_description": "Berikut adalah daftar badan regulasi dan lembaga terkait yang mengawasi dan mendukung kegiatan perdagangan berjangka di Indonesia. Setiap lembaga memiliki peran dan tanggung jawab masing-masing dalam menciptakan ekosistem perdagangan yang transparan, adil, dan berkelanjutan.",
+  "profile_description": "Berikut adalah daftar badan regulasi, Self-Regulatory Organization (SRO), dan asosiasi industri yang mengawasi serta mendukung kegiatan perdagangan berjangka di Indonesia. Setiap lembaga memiliki peran dan tanggung jawab masing-masing dalam menciptakan ekosistem perdagangan yang transparan, adil, dan berkelanjutan.",
+  
   "bappebti": {
+    "category": "REGULATOR",
     "title": "BADAN PENGAWAS PERDAGANGAN BERJANGKA KOMODITI (BAPPEBTI)",
-    "description": "BAPPEBTI atau Badan Pengawas Perdagangan Berjangka Komoditi dibentuk berdasarkan Undang-Undang Nomor 32 Tahun 1997, BAPPEBTI merupakan salah satu unit eselon I berada di bawah Departemen Perdagangan. BAPPEBTI mempunyai tugas melaksanakan pembinaan, pengaturan, dan pengawasan kegiatan perdagangan berjangka berdasarkan kebijakan yang ditetapkan oleh Menteri dan peraturan perundang-undangan yang berlaku."
+    "description": "Badan Pengawas Perdagangan Berjangka Komoditi (BAPPEBTI) adalah lembaga pemerintah yang dibentuk berdasarkan Undang-Undang Nomor 10 Tahun 2011 tentang Perubahan atas Undang-Undang Nomor 32 Tahun 1997 tentang Perdagangan Berjangka Komoditi. Berada di bawah Kementerian Perdagangan, BAPPEBTI berperan sebagai otoritas yang membina, mengatur, mengembangkan, dan mengawasi seluruh kegiatan perdagangan berjangka di Indonesia. Melalui kewenangan yang dimilikinya, BAPPEBTI memastikan bahwa setiap aktivitas perdagangan berjangka berjalan sesuai dengan ketentuan perundang-undangan, memberikan perlindungan kepada masyarakat, serta menciptakan iklim perdagangan yang transparan, aman, dan teratur."
   },
+
+  "ojk": {
+    "category": "REGULATOR",
+    "title": "OTORITAS JASA KEUANGAN (OJK)",
+    "description": "Otoritas Jasa Keuangan (OJK) adalah lembaga independen yang dibentuk berdasarkan Undang-Undang Nomor 21 Tahun 2011 untuk mengatur dan mengawasi seluruh kegiatan di sektor jasa keuangan. Dalam ekosistem Perdagangan Berjangka Komoditi (PBK), OJK menjalankan fungsi pengawasan yang bersifat makro-prudensial, termasuk menjaga stabilitas sistem keuangan, memperkuat perlindungan konsumen, dan mencegah praktik keuangan yang berisiko. Melalui koordinasi dengan BAPPEBTI, Bank Indonesia, dan kementerian terkait, OJK membantu memastikan kegiatan PBK berjalan transparan, sehat, dan sejalan dengan kerangka integritas sistem keuangan nasional."
+  },
+
+  "bi": {
+    "category": "REGULATOR",
+    "title": "BANK INDONESIA (BI)",
+    "description": "Dalam kerangka Undang-Undang Pengembangan dan Penguatan Sektor Keuangan (UU PPSK), Bank Indonesia (BI) memiliki peran pengawasan yang mencakup stabilitas sistem keuangan, termasuk pengaturan dan pengawasan aktivitas transaksi derivatif yang berpotensi berdampak pada sistem pembayaran dan stabilitas moneter. BI memastikan bahwa kegiatan Perdagangan Berjangka Komoditi (PBK) yang berkaitan dengan sistem pembayaran, transfer dana, serta transaksi valuta asing dilakukan secara aman, transparan, dan sesuai ketentuan sehingga tidak menimbulkan risiko terhadap stabilitas keuangan nasional."
+  },
+
   "bbj": {
-    "title": "BURSA BERJANGKA JAKARTA (BBJ)",
-    "description": "PT. Bursa Berjangka Jakarta merupakan bursa pertama yang didirikan dengan Undang-Undang ini. Ia didirikan pada tanggal 19 Agustus 1999 oleh 4 perkebunan sawit, 7 penyulingan sawit, 8 eksportir kopi, 8 perusahaan pialang pasar modal dan 2 perusahaan dagang. Modal disetor hanya sebesar 11,4 milyar Rupiah dari 40 milyar modal yang disetujui. Bursa Berjangka Jakarta memenuhi semua persyaratan yang ditulis dalam UU 32/1997 tersebut dan mendapat lisensi Bappebti pada semester kedua tahun 2000."
+    "category": "SRO",
+    "title": "PT BURSA BERJANGKA JAKARTA",
+    "description": "PT Bursa Berjangka Jakarta (JFX) adalah bursa berjangka resmi di Indonesia yang menyediakan infrastruktur perdagangan untuk berbagai produk derivatif komoditas dan keuangan. Sebagai pusat transaksi berjangka, JFX memastikan proses perdagangan berjalan secara transparan, teratur, dan sesuai regulasi. Melalui standar operasional yang ketat dan dukungan teknologi yang andal, JFX berperan penting dalam menciptakan ekosistem perdagangan berjangka yang aman, efisien, dan terpercaya bagi seluruh pelaku pasar."
   },
+
   "kbi": {
-    "title": "KLIRING BERJANGKA INDONESIA (KBI)",
-    "description": "PT KLIRING BERJANGKA INDONESIA (Persero) merupakan suatu Badan Usaha Milik Negara yang bercita-cita untuk menjadi suatu perusahaan domestik yang efektif dan pada akhirnya menjadi suatu perusahaan global yang berstandar international. Didirikan untuk mengkliringkan dan menjamin penyelesaian transaksi kontrak Berjangka/Derivatif/Spot & Forward dan Resi Gudang secara teratur, wajar, dan efisien sehingga mampu memelihara Integritas Finansial Pasar."
+    "category": "SRO",
+    "title": "PT KLIRING BERJANGKA INDONESIA",
+    "description": "PT Kliring Berjangka Indonesia (KBI) adalah lembaga kliring resmi yang menjamin penyelesaian transaksi di pasar berjangka Indonesia. KBI memastikan setiap transaksi yang terjadi di Bursa Berjangka terselesaikan dengan aman melalui mekanisme kliring, penjaminan, dan pengelolaan risiko. Dengan sistem yang terintegrasi dan diawasi oleh pemerintah, KBI menjadi salah satu pilar utama dalam menjaga kepercayaan, integritas, dan stabilitas industri perdagangan berjangka nasional."
   },
+
+  "aspebtindo": {
+    "category": "ASOSIASI",
+    "title": "ASOSIASI PERDAGANGAN BERJANGKA INDONESIA (ASPEBTINDO)",
+    "description": "Asosiasi Perdagangan Berjangka Indonesia (ASPEBTINDO) merupakan organisasi resmi yang menaungi para pelaku industri Perdagangan Berjangka Komoditi di Indonesia. Asosiasi ini berperan dalam menetapkan standar profesional, mendorong praktik usaha yang sehat, serta memperkuat tata kelola industri melalui harmonisasi kebijakan dan kolaborasi dengan regulator terkait. ASPEBTINDO juga aktif menjembatani komunikasi antara pelaku usaha, pemerintah, dan masyarakat untuk mendorong pertumbuhan industri yang berkelanjutan."
+  },
+
   "sitna": {
+    "category": "SISTEM PENGAWASAN",
     "title": "SISTEM INFORMASI TRANSAKSI NASIONAL (SITNA)",
-    "description": "Sistem Informasi Transaksi Nasional (SITNA) adalah sistem elektronik yang dibentuk oleh BAPPEBTI untuk mencatat dan melaporkan seluruh transaksi perdagangan berjangka komoditi yang dilakukan oleh Bursa Berjangka, Kliring Berjangka, dan Pialang Berjangka di Indonesia. SITNA berfungsi untuk meningkatkan transparansi, efisiensi, dan pengawasan di pasar modal berjangka, serta melindungi kepentingan masyarakat investor."
+    "description": "Sistem Informasi Transaksi Nasional (SITNA) adalah sistem elektronik yang dibentuk oleh BAPPEBTI untuk mencatat dan melaporkan seluruh transaksi perdagangan berjangka komoditi yang dilakukan oleh Bursa Berjangka, Kliring Berjangka, dan Pialang Berjangka di Indonesia. SITNA berfungsi untuk meningkatkan transparansi, efisiensi, dan pengawasan di pasar berjangka, sekaligus memperkuat perlindungan terhadap kepentingan masyarakat investor melalui pencatatan data transaksi yang lebih akurat dan terintegrasi."
   }
 }
