@@ -324,16 +324,16 @@
   ],
   
   "segregatedAccountNote": "(Segregated Account is required to ensure that client funds cannot be used for any other purpose except for transaction purposes)",
-
+  
   "penarikanDana": {
     "title": "Withdrawal Procedure",
-    "description": "Funds Withdrawal can be made at any time by the Client as desired, provided that the withdrawn amount does not exceed the <span class='font-medium'>Effective Margin</span> stated in the Client's daily transaction report (<span class='italic'>Statement Report</span>).",
-    "prosesTitle": "Funds Withdrawal Process (<span class='italic'>Withdrawal</span>)",
+    "description": "Clients may withdraw funds at any time, provided that the amount withdrawn does not exceed the <span class='font-medium'>Effective Margin</span> stated in the daily transaction report (<span class='italic'>Statement Report</span>).",
+    "prosesTitle": "Withdrawal Steps",
     "prosesSteps": [
-      "Client logs in to the <span class='font-medium'>Withdrawal</span> menu on the real trading account to submit a withdrawal request in accordance with the applicable terms and conditions.",
-      "Client fills out the withdrawal application form completely and correctly.",
-      "Funds can only be transferred to an account under the Client's name that matches the previously approved Account Opening Application document.",
-      "The standard withdrawal process takes a maximum of <span class='font-medium'>three working days (T+3)</span>. However, PT BestProfit Futures is committed to expediting the process to be completed within <span class='font-medium'>one working day (T+1)</span>."
+      "Log in to the <span class='font-medium'>Withdrawal</span> menu in the live trading account.",
+      "Complete the withdrawal request form accurately and in full, in accordance with the applicable terms and conditions.",
+      "Funds will only be transferred to a bank account under the Client’s name, as stated in the approved account opening documents.",
+      "The standard withdrawal process requires a maximum of <span class='font-medium'>three business days (T+3)</span>. PT BestProfit Futures is committed to accelerating this process so that funds can be received within a maximum of <span class='font-medium'>one business day (T+1)</span>."
     ]
   },
   
