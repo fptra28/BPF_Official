@@ -4,48 +4,38 @@
   "services": [
     {
       "title": "Wakil Pialang Berjangka Profesional",
-      "description": "Perusahaan didukung oleh Wakil Pialang Berjangka Profesional yang telah disertifikasi oleh Bappebti.",
-      "icon": ""
-    },
-    {
-      "title": "Sistem Keamanan 2FA",
-      "description": "Penerapan One Time Password (OTP) pada saat login ke dalam sistem transaksi online trading.",
+      "description": "PT Bestprofit Futures didukung oleh Wakil Pialang Berjangka (WPB) yang tersertifikasi dan berpengalaman. Setiap WPB berkomitmen memberikan layanan terbaik melalui edukasi, pendampingan administrasi, hingga penjelasan mekanisme transaksi di Sistem Perdagangan Alternatif. Dengan kompetensi yang terstandarisasi dan pemahaman mendalam mengenai dinamika pasar, WPB kami hadir untuk memastikan setiap nasabah memperoleh informasi yang akurat, transparan, dan sesuai ketentuan yang berlaku.",
       "icon": ""
     },
     {
       "title": "Online Trading & Demo Account",
-      "description": "Portal khusus untuk bertransaksi online dengan spread price real-time, chart, dan informasi market. Dilengkapi fasilitas Demo Account untuk simulasi transaksi.",
+      "description": "PT Bestprofit Futures menyediakan platform Online Trading yang modern, cepat, dan mudah digunakan, sehingga nasabah dapat bertransaksi kapan saja selama jam pasar berlangsung. Untuk membantu pemahaman sebelum memasuki pasar riil, BPF juga menyediakan Demo Account sebagai sarana simulasi transaksi, memungkinkan calon nasabah mempelajari fitur, strategi, dan alur trading tanpa risiko finansial.",
       "icon": ""
     },
     {
-      "title": "Registrasi Online",
-      "description": "Fasilitas pendaftaran online bagi calon nasabah melalui website resmi PT. BestProfit Futures.",
+      "title": "Laporan Transaksi Harian (Daily Statement)",
+      "description": "Setiap nasabah akan menerima laporan transaksi harian yang berisi rincian posisi, saldo, serta seluruh aktivitas trading pada hari tersebut. Laporan dapat dikirimkan melalui email dan juga dapat diakses langsung melalui platform online trading melalui menu Daily Statement.",
       "icon": ""
-    },
-    {
-      "title": "Laporan Transaksi Harian",
-      "description": "Laporan transaksi harian yang dikirimkan melalui email nasabah, mencatat seluruh aktivitas transaksi yang telah dilakukan.",
-      "icon": ""
-    },
-    {
-      "title": "Penarikan Dana (Withdrawal)",
-      "description": "Formulir penarikan dana dapat dilakukan secara online. Dana dapat diproses dalam satu hari kerja (T+1) setelah semua ketentuan terpenuhi."
     },
     {
       "title": "Rekening Terpisah (Segregated Account)",
-      "description": "Seluruh dana nasabah ditempatkan di dalam Rekening Terpisah yang telah disetujui oleh Bappebti dan terpisah dari aset perusahaan."
+      "description": "Dana nasabah disimpan dalam Segregated Account, yaitu rekening terpisah yang berdiri independen dari aset perusahaan. Mekanisme ini memastikan seluruh dana yang ditempatkan hanya digunakan untuk kepentingan transaksi nasabah, sesuai ketentuan BAPPEBTI. Dengan sistem penyimpanan terpisah ini, keamanan, transparansi, dan integritas dana nasabah tetap terjaga setiap saat.",
+      "icon": ""
     },
     {
-      "title": "Fleksibilitas Transaksi",
-      "description": "Transaksi dua arah memungkinkan investor mendapatkan keuntungan baik saat market naik maupun turun, dengan likuiditas produk yang tinggi."
+      "title": "Sistem Keamanan 2FA",
+      "description": "Untuk meningkatkan perlindungan akses akun, PT Bestprofit Futures menerapkan sistem keamanan Two-Factor Authentication (2FA). Lapisan keamanan tambahan ini memastikan setiap transaksi dan login dilakukan secara aman oleh pemilik akun yang sah.",
+      "icon": ""
+    },
+    {
+      "title": "Program SITNa",
+      "description": "SITNa adalah program transparansi transaksi yang memberikan akses bagi nasabah untuk memverifikasi aktivitas perdagangan mereka secara langsung pada sistem Bursa Berjangka Jakarta (BBJ) dan Kliring Berjangka Indonesia (KBI). Melalui fitur ini, nasabah dapat memastikan setiap transaksi tercatat dengan akurat dan sesuai ketentuan yang berlaku, sehingga menghadirkan tingkat kepercayaan dan keamanan yang lebih tinggi dalam bertransaksi.",
+      "icon": ""
     },
     {
       "title": "Sarana Penyelesaian Perselisihan",
-      "description": "Penanganan pengaduan nasabah mengacu pada Peraturan Bappebti Nomor 4 Tahun 2020 tentang Pedoman Penyelesaian Perselisihan Nasabah di Bidang Perdagangan Berjangka Komoditi."
-    },
-    {
-      "title": "Program Sitna",
-      "description": "Program transparansi transaksi yang memungkinkan nasabah memantau transaksi pada Bursa Berjangka Jakarta (BBJ) dan Kliring Berjangka Indonesia."
+      "description": "PT Bestprofit Futures menyediakan mekanisme penanganan pengaduan nasabah yang sesuai dengan ketentuan Peraturan Bappebti Nomor 4 Tahun 2020. Proses penyelesaian dilakukan secara terstruktur dan transparan untuk memastikan setiap aduan ditangani dengan adil dan profesional.",
+      "icon": ""
     }
   ]
 }

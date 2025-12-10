@@ -1,51 +1,41 @@
 {
   "pageTitle": "Facilities & Services",
-  "pageDescription": "PT Bestprofit Futures provides various best facilities and services to support your trading activities safely, comfortably, and profitably.",
+  "pageDescription": "PT Bestprofit Futures provides a range of high-quality facilities and services to support your trading activities in a safe, convenient, and profitable way.",
   "services": [
     {
-      "title": "Professional Futures Broker Representatives",
-      "description": "The company is supported by Professional Futures Broker Representatives who are certified by Bappebti.",
-      "icon": ""
-    },
-    {
-      "title": "2FA Security System",
-      "description": "Implementation of One Time Password (OTP) when logging into the online trading transaction system.",
+      "title": "Professional Licensed Futures Broker Representatives",
+      "description": "PT Bestprofit Futures is supported by Licensed Futures Broker Representatives (Wakil Pialang Berjangka/WPB) who are certified and experienced. Each WPB is committed to delivering the best service through education, administrative assistance, and clear explanation of transaction mechanisms in the Alternative Trading System. With standardized competencies and in-depth understanding of market dynamics, our WPBs are here to ensure every client receives accurate, transparent information that complies with applicable regulations.",
       "icon": ""
     },
     {
       "title": "Online Trading & Demo Account",
-      "description": "A dedicated portal for online transactions with real-time spread prices, charts, and market information. Equipped with a Demo Account feature for transaction simulations.",
+      "description": "PT Bestprofit Futures provides a modern, fast, and user-friendly online trading platform, enabling clients to trade at any time during market hours. To help users understand the market before entering real trading, BPF also offers a Demo Account as a simulation tool, allowing prospective clients to learn features, strategies, and trading flows without financial risk.",
       "icon": ""
     },
     {
-      "title": "Online Registration",
-      "description": "Online registration facility for prospective clients through PT. BestProfit Futures' official website.",
+      "title": "Daily Transaction Report (Daily Statement)",
+      "description": "Each client receives a daily transaction report containing detailed information on positions, balances, and all trading activities for that day. The report can be sent via email and is also accessible directly through the online trading platform via the Daily Statement menu.",
       "icon": ""
-    },
-    {
-      "title": "Daily Transaction Reports",
-      "description": "Daily transaction reports sent via client email, recording all transaction activities that have been carried out.",
-      "icon": ""
-    },
-    {
-      "title": "Fund Withdrawal",
-      "description": "Withdrawal forms can be processed online. Funds can be processed within one business day (T+1) after all requirements are met."
     },
     {
       "title": "Segregated Account",
-      "description": "All customer funds are placed in a Segregated Account approved by Bappebti and separated from company assets."
+      "description": "Client funds are kept in a Segregated Account, a separate bank account that is independent from the company’s assets. This mechanism ensures that all funds placed are used solely for clients’ trading activities, in accordance with BAPPEBTI regulations. With this segregated fund structure, the security, transparency, and integrity of client funds are maintained at all times.",
+      "icon": ""
     },
     {
-      "title": "Transaction Flexibility",
-      "description": "Two-way transactions allow investors to profit whether the market rises or falls, with high product liquidity."
+      "title": "2FA Security System",
+      "description": "To enhance account access protection, PT Bestprofit Futures implements a Two-Factor Authentication (2FA) security system. This additional security layer ensures that every login and transaction is performed securely by the legitimate account owner.",
+      "icon": ""
     },
     {
-      "title": "Dispute Resolution",
-      "description": "Customer complaint handling refers to Bappebti Regulation Number 4 of 2020 concerning Guidelines for Customer Dispute Resolution in the Commodity Futures Trading Sector."
+      "title": "SITNa Program",
+      "description": "SITNa is a transaction transparency program that provides clients with access to verify their trading activities directly within the systems of the Jakarta Futures Exchange (JFX) and Indonesia Clearing House (KBI). Through this feature, clients can ensure that every transaction is recorded accurately and in accordance with applicable regulations, thereby increasing trust and security in their trading activities.",
+      "icon": ""
     },
     {
-      "title": "Sitna Program",
-      "description": "A transaction transparency program that allows customers to monitor transactions on the Jakarta Futures Exchange (JFX) and Indonesia Clearing House."
+      "title": "Dispute Resolution Facility",
+      "description": "PT Bestprofit Futures provides a structured complaint-handling mechanism in accordance with Bappebti Regulation Number 4 of 2020. The dispute resolution process is carried out in a transparent and professional manner to ensure that every complaint is handled fairly and properly.",
+      "icon": ""
     }
   ]
 }
