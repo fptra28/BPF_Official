@@ -27,7 +27,7 @@ const baseMenuItems: NavItem[] = [
     submenu: [
       { key: "about_companyProfile", label: "Profil Perusahaan", href: "/profil/perusahaan" },
       { key: "about_businessLicense", label: "Legalitas Bisnis", href: "/profil/legalitas-bisnis" },
-      { key: "about_brokerRepresentative", label: "Wakil Pialang", href: "/profil/wakil-pialang" },
+      { key: "about_brokerRepresentative", label: "Wakil Pialang Berjangka", href: "/profil/wakil-pialang" },
       { key: "about_regulatoryBody", label: "Kelembagaan", href: "/profil/badan-regulasi" },
       { key: "about_facilitiesServices", label: "Fasilitas & Layanan", href: "/umum/fasilitas-layanan" },
       {
@@ -65,8 +65,8 @@ const baseMenuItems: NavItem[] = [
     label: "Prosedur",
     submenu: [
       { key: "procedures_onlineRegistration", label: "Pendaftaran Online", href: "/prosedur/registrasi-online" },
-      { key: "procedures_withdrawal", label: "Penarikan Dana", href: "/prosedur/penarikan" },
       { key: "procedures_transactionGuide", label: "Panduan Transaksi", href: "/prosedur/petunjuk-transaksi" },
+      { key: "procedures_withdrawal", label: "Penarikan Dana", href: "/prosedur/penarikan" },
     ],
   },
   {
