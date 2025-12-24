@@ -83,7 +83,7 @@ const MekanismePerdaganganPage = () => {
                                     </h3>
                                     <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-[#E5E7EB]">
                                         <Image 
-                                            src="/assets/alur-perdagangan-multi.jpg" 
+                                            src="/assets/MEKANISME PERDAGANGAN BPF-03.png" 
                                             alt={t('multilateral.flowTitle')} 
                                             width={600}
                                             height={450}
@@ -97,7 +97,7 @@ const MekanismePerdaganganPage = () => {
                                     </h3>
                                     <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-[#E5E7EB]">
                                         <Image 
-                                            src="/assets/alur-perdagangan-bila.jpg"
+                                            src="/assets/MEKANISME PERDAGANGAN BPF-02.png"
                                             alt={t('bilateral.flowTitle')}
                                             width={600}
                                             height={450}
