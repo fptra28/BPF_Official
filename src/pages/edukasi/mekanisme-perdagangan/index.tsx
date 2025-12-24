@@ -85,8 +85,8 @@ const MekanismePerdaganganPage = () => {
                                         <Image 
                                             src="/assets/MEKANISME PERDAGANGAN BPF-03.png" 
                                             alt={t('multilateral.flowTitle')} 
-                                            width={600}
-                                            height={450}
+                                            width={500}
+                                            height={350}
                                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                         />
                                     </div>
@@ -99,8 +99,8 @@ const MekanismePerdaganganPage = () => {
                                         <Image 
                                             src="/assets/MEKANISME PERDAGANGAN BPF-02.png"
                                             alt={t('bilateral.flowTitle')}
-                                            width={600}
-                                            height={450}
+                                            width={500}
+                                            height={350}
                                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                         />
                                     </div>
