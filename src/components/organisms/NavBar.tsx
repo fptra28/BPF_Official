@@ -96,6 +96,7 @@ const baseMenuItems: NavItem[] = [
       },
     ],
   },
+  { key: "careers", label: "Karier", href: "/karier" },
 ];
 
 const NavBar: React.FC = () => {
