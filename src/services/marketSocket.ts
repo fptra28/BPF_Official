@@ -17,6 +17,7 @@ export interface MarketTick {
 }
 
 const WS_URL = 'wss://wsprc.royalassetindo.co.id';
+const HIDDEN_SYMBOLS = new Set(['XAG10_BBJ', 'XAGF_BBJ']);
 
 const toNumber = (value: unknown): number => {
   if (value === null || value === undefined) return 0;
@@ -59,6 +60,7 @@ export const parseMarketSocketData = (raw: unknown): MarketTick[] | null => {
 
   const ticks = entries
     .filter(([symbol, item]) => Boolean(symbol) && item && typeof item === 'object')
+    .filter(([symbol]) => !HIDDEN_SYMBOLS.has(String(symbol)))
     .map(([symbol, item]) => {
       const last = toNumber(item.price) || toNumber(item.buy) || toNumber(item.sell);
       const percentChange = computePercentChange(item);
