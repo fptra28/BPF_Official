@@ -55,6 +55,7 @@ const defaultBanners: Banner[] = [
 const CTA_ITEMS = [
     { label: "Daftar Sekarang", link: "https://regol.bestprofit-futures.co.id/" },
     { label: "Demo", link: "https://demo.bestprofit-futures.com/login" },
+    { label: "Regol Login", link: "https://regol.bestprofit-futures.co.id/login" },
     { label: "Live", link: "https://etrade.bestprofit-futures.com/login" },
 ];
 
