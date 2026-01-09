@@ -53,10 +53,10 @@ const defaultBanners: Banner[] = [
 ];
 
 const CTA_ITEMS = [
-    { label: "Daftar Sekarang", link: "https://regol.bestprofit-futures.co.id/" },
-    { label: "Demo", link: "https://demo.bestprofit-futures.com/login" },
-    { label: "Regol Login", link: "https://regol.bestprofit-futures.co.id/login" },
-    { label: "Live", link: "https://etrade.bestprofit-futures.com/login" },
+    { label: "Demo Registration", link: "https://regol.bestprofit-futures.co.id/" },
+    { label: "Demo Account", link: "https://demo.bestprofit-futures.com/login" },
+    { label: "Register Online", link: "https://regol.bestprofit-futures.co.id/login" },
+    { label: "Real Account", link: "https://etrade.bestprofit-futures.com/login" },
 ];
 
 export default function CarouselWithContent() {
