@@ -26,7 +26,7 @@ const kantorPusat: Kantor = {
   telepon: "+62 21 2903 5005 (Hunting)",
   fax: "+62 21 2903 5132",
   email: "corporate@bestprofit-futures.co.id",
-  mapLink: "https://maps.google.com/?q=Equity+Tower+Jakarta"
+  mapLink: "https://share.google/JQ6puGVdOMPJLNVe9"
 };
 
 const kantorCabang: Kantor[] = [
@@ -35,14 +35,14 @@ const kantorCabang: Kantor[] = [
     alamat: "Jl. Kolonel Abunjani No. 29 C, Sipin\nKelurahan Selamat, Kecamatan Danau Sipin, Jambi 36129",
     telepon: "0741 - 668288",
     fax: "0741 - 669100",
-    mapLink: "https://maps.google.com/?q=Jl.+Kolonel+Abunjani+No.+29+C,+Jambi"
+    mapLink: "https://share.google/WGx4XUFE9gSoqN9lG"
   },
   {
     kota: "JAKARTA - Pacific Place Mall",
     alamat: "Pacific Place Mall Shop Lt. 3, Unit 3 - 99\nJl. Jend. Sudirman Kav. 52-53, SCBD - Jakarta Selatan 12190",
     telepon: "021 - 5797 3015",
     fax: "021 - 5797 3515",
-    mapLink: "https://maps.google.com/?q=Pacific+Place+Mall+Jakarta"
+    mapLink: "https://share.google/RXhKwPwn3OSVBWHf0"
   },
   {
     kota: "PONTIANAK",
@@ -63,35 +63,35 @@ const kantorCabang: Kantor[] = [
     alamat: "Graha Bukopin, Lantai 11\nJl. Panglima Sudirman No. 10 - 18, Surabaya 60271",
     telepon: "031 - 5349888",
     fax: "031 - 5340777",
-    mapLink: "https://maps.google.com/?q=Graha+Bukopin+Surabaya"
+    mapLink: "https://share.google/ZAN7u5VhNukLtfTp3"
   },
   {
     kota: "MEDAN",
     alamat: "Ruko Jati Junction, Jl. Perintis Kemerdekaan No. P9A-10A\nKel. Perintis, Kec. Medan Timur, Medan 20218",
     telepon: "061 - 80501610",
     fax: "061 - 80501699",
-    mapLink: "https://maps.google.com/?q=Jati+Junction+Medan"
+    mapLink: "https://share.google/UJ6BhJcCTftCMAYBc"
   },
   {
     kota: "BANDUNG",
     alamat: "Jl. Jakarta No. 21, Kel. Kacapiring\nKec. Batununggal, Kota Bandung 40271",
     telepon: "022 - 20504000",
     fax: "022 - 20504444",
-    mapLink: "https://maps.google.com/?q=Jl.+Jakarta+No.+21+Bandung"
+    mapLink: "https://share.google/9NpByz6Y9d2qzoQWY"
   },
   {
     kota: "PEKANBARU",
     alamat: "Komplek Sudirman City Square\nJl. Jend. Sudirman Blok C5-C10, Bukit Raya\nTengkerang Selatan, Pekanbaru, Riau 28288",
     telepon: "0761 - 888828",
     fax: "0761 - 888829",
-    mapLink: "https://maps.google.com/?q=Sudirman+City+Square+Pekanbaru"
+    mapLink: "https://share.google/qfJQZOT2MSCcb4Iih"
   },
   {
     kota: "BANJARMASIN",
     alamat: "Jl. Ahmad Yani KM. 4.5 No. 71/339, Kel. Kebun Bunga\nKec. Banjarmasin Timur - Kalimantan Selatan 70235",
     telepon: "0511 - 3263838",
     fax: "0511 - 3270808",
-    mapLink: "https://maps.google.com/?q=Jl.+Ahmad+Yani+KM+4.5+Banjarmasin"
+    mapLink: "https://share.google/r6Je7hWqIiJbdy3hx"
   },
   {
     kota: "BANDAR LAMPUNG",
@@ -105,7 +105,7 @@ const kantorCabang: Kantor[] = [
     alamat: "Jl. Veteran No. 61, RT 5/RW 6, Kel. Lempongsari,\nKec. Gajahmungkur, Kota Semarang - Jawa Tengah 50231",
     telepon: "024 - 76444722",
     fax: "024 - 76444733",
-    mapLink: "https://maps.google.com/?q=Jl.+Veteran+No.+61+Semarang"
+    mapLink: "https://share.google/lqUpvGZemk0joJav4"
   }
 ];
 
@@ -139,6 +139,14 @@ const OfficeCard = ({ office, isHeadOffice = false, t }: OfficeProps) => (
           </a>
         </p>
       )}
+      <a 
+        href={office.mapLink} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="inline-flex items-center text-[#FF0000] hover:underline text-xs mt-1"
+      >
+        {t('viewOnMap', 'Lihat di Peta')} <FaExternalLinkAlt className="ml-1" size={10} />
+      </a>
     </div>
   </div>
 );
