@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
+import { connectMarketSocket, MarketTick } from '@/services/marketSocket';
 
 const LastUpdatedTime = () => {
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -171,30 +172,14 @@ export default function Market() {
   const { t } = useTranslation('market');
 
   useEffect(() => {
-    const fetchMarketData = async () => {
-      try {
-        const res = await fetch('/api/market');
-        
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`Error ${res.status}: ${res.statusText || t('errorFetching')}`);
-        }
-
-        const data = await res.json();
-        
-        // Pastikan data adalah array
-        if (!Array.isArray(data)) {
-          throw new Error(t('invalidDataFormat'));
-        }
-
-        // Proses data
-        const processedData = data.map((item: any) => ({
+    const disconnectSocket = connectMarketSocket({
+      onData: (ticks: MarketTick[]) => {
+        const processedData = ticks.map((item) => ({
           symbol: item.symbol || '',
           last: Number(item.last) || 0,
           percentChange: Number(item.percentChange) || 0
         }));
 
-        // Tambahkan arah berdasarkan data sebelumnya
         const dataWithDirection = processedData.map((item: MarketItem) => {
           const prevItem = prevDataRef.current.find(prev => prev.symbol === item.symbol);
           let direction: Direction = 'neutral';
@@ -210,23 +195,18 @@ export default function Market() {
         setMarketData(dataWithDirection);
         prevDataRef.current = dataWithDirection;
         setErrorMessage('');
-      } catch (error: any) {
-        console.error('Error:', error);
-        setErrorMessage(error.message || t('error'));
-      } finally {
+        setIsLoading(false);
+      },
+      onError: (message) => {
+        setErrorMessage(message || t('error'));
         setIsLoading(false);
       }
-    };
+    });
 
-    // Ambil data pertama kali
-    fetchMarketData();
-    
-    // Atur polling setiap 5 detik
-    const intervalId = setInterval(fetchMarketData, 5000);
-    
-    // Bersihkan interval saat komponen di-unmount
-    return () => clearInterval(intervalId);
-  }, []);
+    return () => {
+      disconnectSocket();
+    };
+  }, [t]);
 
   return (
     <section className="py-16 bg-gradient-to-b from-white to-[#F8F9FF] relative overflow-hidden">

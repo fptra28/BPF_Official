@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { fetchLatestNews, NewsItem } from "@/services/newsService";
-import Link from "next/link";
+import { connectMarketSocket, MarketTick } from "@/services/marketSocket";
 
 interface MarketItem {
   symbol: string;
@@ -23,7 +23,7 @@ export default function MarketUpdate() {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     // Fungsi untuk update berita
-    const updateNews = (news: NewsItem[]) => {
+    const updateNews = useCallback((news: NewsItem[]) => {
         const newsWithCategory = news
             .sort((a, b) => a.id - b.id) // Sort by ID in ascending order (oldest first)
             .slice(-3) // Take the 3 most recent news (last 3 items)
@@ -36,47 +36,29 @@ export default function MarketUpdate() {
                 }
             }));
         setLatestNews(newsWithCategory);
-    };
+    }, []);
 
     // Gunakan useRef untuk menyimpan interval ID
-    const intervalRef = React.useRef<{market: NodeJS.Timeout | null, news: NodeJS.Timeout | null}>({market: null, news: null});
+    const intervalRef = React.useRef<{news: NodeJS.Timeout | null}>({news: null});
 
-    const fetchMarketData = useCallback(async () => {
-        try {
-            const res = await fetch('/api/market');
+    const handleSocketData = useCallback((ticks: MarketTick[]) => {
+        const filteredData = ticks
+            .filter((item) => item?.symbol)
+            .map((item): MarketItem => ({
+                symbol: String(item.symbol),
+                last: Number(item.last) || 0,
+                percentChange: Number(item.percentChange) || 0
+            }));
 
-            if (!res.ok) {
-                const errorText = `${res.status} ${res.statusText}`;
-                console.error('Respon error:', errorText);
-                setErrorMessage(errorText);
-                setMarketData([]);
-                return;
-            }
-
-            const data = await res.json();
-
-            const filteredData = data
-                .filter((item: any) => item?.symbol && typeof item.last === 'number')
-                .map((item: any): MarketItem => ({
-                    symbol: String(item.symbol),
-                    last: Number(item.last),
-                    percentChange: Number(item.percentChange) || 0,
-                }));
-
-            setMarketData(filteredData);
-            setErrorMessage(""); // clear error
-        } catch (error: any) {
-            console.error('Fetch gagal:', error);
-            setErrorMessage(error?.message || "Gagal memuat data");
-            setMarketData([]);
-        }
-    }, []);
+        setMarketData(filteredData);
+        setErrorMessage("");
+        setLoading(false);
+    }, [updateNews]);
 
     const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             await Promise.all([
-                fetchMarketData(),
                 fetchLatestNews(5).then(updateNews),
             ]);
         } catch (error) {
@@ -84,20 +66,20 @@ export default function MarketUpdate() {
         } finally {
             setLoading(false);
         }
-    }, [fetchMarketData]);
+    }, []);
 
     useEffect(() => {
         // Hanya jalankan di client-side
         if (typeof window !== 'undefined') {
             fetchData();
 
-            // Gunakan requestAnimationFrame untuk menghindari masalah di iOS
-            const startMarketUpdates = () => {
-                if (intervalRef.current.market) clearInterval(intervalRef.current.market);
-                intervalRef.current.market = setInterval(() => {
-                    fetchMarketData();
-                }, 30000); // Kurangi frekuensi update menjadi 30 detik
-            };
+            const disconnectSocket = connectMarketSocket({
+                onData: handleSocketData,
+                onError: (message) => {
+                    setErrorMessage(message);
+                    setLoading(false);
+                }
+            });
 
             const startNewsUpdates = () => {
                 if (intervalRef.current.news) clearInterval(intervalRef.current.news);
@@ -107,17 +89,15 @@ export default function MarketUpdate() {
             };
 
             // Mulai interval dengan delay untuk menghindari race condition
-            const marketTimer = setTimeout(startMarketUpdates, 1000);
             const newsTimer = setTimeout(startNewsUpdates, 5000);
 
             return () => {
-                clearTimeout(marketTimer);
                 clearTimeout(newsTimer);
-                if (intervalRef.current.market) clearInterval(intervalRef.current.market);
                 if (intervalRef.current.news) clearInterval(intervalRef.current.news);
+                disconnectSocket();
             };
         }
-    }, [fetchData, fetchMarketData]);
+    }, [fetchData, handleSocketData]);
 
     const formatPrice = (symbol: string, price: number): string => {
         if (!price && price !== 0) return '-';
