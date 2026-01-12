@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { GetStaticProps } from 'next';
+import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import PageTemplate from "@/components/templates/PageTemplate";
 import CarouselWithContent from "@/components/organisms/CarouselWithContent";
@@ -12,6 +13,7 @@ import Iso from "@/components/organisms/Market";
 import Pengumuman from "@/components/organisms/Pengumuman";
 import WelcomeModal from "@/components/moleculs/WelcomeModal";
 import WakilPialangSection from "@/components/organisms/WakilPialangSection";
+import LiveQuotesPromo from "@/components/moleculs/LiveQuotesPromo";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
@@ -34,6 +36,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
+  const { t } = useTranslation('produk', { useSuspense: false });
 
   useEffect(() => {
     // Nonaktifkan sementara modal welcome
@@ -75,7 +78,11 @@ export default function HomePage() {
 
         <hr className="border-gray-200 " />
 
-        <Iso />
+        <Iso showOhlc={false} />
+
+        <div className="sm:px-6 md:px-10 lg:px-20 xl:px-36 2xl:px-52 -mt-6">
+          <LiveQuotesPromo />
+        </div>
 
         <hr className="border-gray-200" />
 

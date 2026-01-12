@@ -7,6 +7,11 @@
   "viewDetails": "Lihat Detail",
   "viewAllProducts": "Lihat Semua Produk",
   "defaultDescription": "Temukan peluang investasi terbaik dengan produk unggulan kami.",
+  "liveQuotesSection": {
+    "title": "Data Pasar Real-time",
+    "description": "Pantau open, low, dan close pergerakan live quotes komoditas dan mata uang kami di halaman khusus ini.",
+    "cta": "Lihat Live Quotes"
+  },
   "productAdvantages": {
     "title": "Keunggulan Produk",
     "description": "PT. BestProfit Futures adalah salah satu perusahaan pialang berjangka yang bergerak dibidang perdagangan komoditi dan konsisten dalam misi pengembangan iklim investasi di Indonesia.",

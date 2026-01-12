@@ -14,6 +14,11 @@ export interface MarketTick {
   symbol: string;
   last: number;
   percentChange: number;
+  open: number | null;
+  high: number | null;
+  low: number | null;
+  buy: number | null;
+  sell: number | null;
 }
 
 const WS_URL = 'wss://wsprc.royalassetindo.co.id';
@@ -64,10 +69,20 @@ export const parseMarketSocketData = (raw: unknown): MarketTick[] | null => {
     .map(([symbol, item]) => {
       const last = toNumber(item.price) || toNumber(item.buy) || toNumber(item.sell);
       const percentChange = computePercentChange(item);
+      const open = toNumberOrNull(item.oprice);
+      const high = toNumberOrNull(item.hprice);
+      const low = toNumberOrNull(item.lprice);
+      const buy = toNumberOrNull(item.buy);
+      const sell = toNumberOrNull(item.sell);
       return {
         symbol: String(symbol),
         last,
-        percentChange
+        percentChange,
+        open,
+        high,
+        low,
+        buy,
+        sell
       };
     });
 
@@ -98,7 +113,7 @@ export const connectMarketSocket = (handlers: {
     };
 
     ws.onerror = () => {
-      handlers.onError?.('Koneksi WebSocket bermasalah');
+      handlers.onError?.('');
     };
 
     ws.onclose = () => {

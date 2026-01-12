@@ -49,17 +49,18 @@ const baseMenuItems: NavItem[] = [
       { key: "about_contact", label: "Kontak", href: "/hubungi-kami" },
     ],
   },
-  {
-    key: "products",
-    label: "Produk",
-    submenu: [
-      { key: "products_allProducts", label: "Semua Produk", href: "/produk" },
-      { key: "products_jfxProducts", label: "Produk JFX", href: "/produk/jfx" },
-      { key: "products_spaProducts", label: "Produk SPA", href: "/produk/spa" },
-      { key: "products_productAdvantages", label: "Keunggulan Produk", href: "/produk/keunggulan-produk" },
-      { key: "products_transactionIllustration", label: "Ilustrasi Transaksi", href: "/prosedur/ilustrasi-transaksi" },
-    ],
-  },
+	  {
+	    key: "products",
+	    label: "Produk",
+	    submenu: [
+	      { key: "products_allProducts", label: "Semua Produk", href: "/produk" },
+	      { key: "products_jfxProducts", label: "Produk JFX", href: "/produk/jfx" },
+	      { key: "products_spaProducts", label: "Produk SPA", href: "/produk/spa" },
+	      { key: "products_liveQuotes", label: "Data Pasar Real-time", href: "/produk/data-pasar-realtime" },
+	      { key: "products_productAdvantages", label: "Keunggulan Produk", href: "/produk/keunggulan-produk" },
+	      { key: "products_transactionIllustration", label: "Ilustrasi Transaksi", href: "/prosedur/ilustrasi-transaksi" },
+	    ],
+	  },
   {
     key: "procedures",
     label: "Prosedur",

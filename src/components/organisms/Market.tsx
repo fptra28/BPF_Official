@@ -40,12 +40,24 @@ type Direction = 'up' | 'down' | 'neutral';
 
 interface MarketItem {
   symbol: string;
+  displayName: string;
   last: number;
   percentChange: number;
+  open: number | null;
+  high: number | null;
+  low: number | null;
   direction?: Direction;
 }
 
-const MarketCard = ({ item, index }: { item: MarketItem; index: number }) => {
+const MarketCard = ({
+  item,
+  index,
+  showOhlc,
+}: {
+  item: MarketItem;
+  index: number;
+  showOhlc: boolean;
+}) => {
   const isPositive = item.percentChange >= 0;
   const [currentTime, setCurrentTime] = useState<string>('');
   
@@ -71,7 +83,7 @@ const MarketCard = ({ item, index }: { item: MarketItem; index: number }) => {
     return symbol.replace(/^(IDR|USD)/, '').trim();
   };
   
-  const formatPrice = (symbol: string, price: number | undefined): string => {
+  const formatPrice = (symbol: string, price: number | null | undefined): string => {
     // Handle undefined or null price
     if (price === undefined || price === null) return '-.-';
     
@@ -111,7 +123,7 @@ const MarketCard = ({ item, index }: { item: MarketItem; index: number }) => {
             <h3 className="text-2xl font-bold text-[#080031] mb-1">
               {formatPrice(item.symbol, item.last)}
             </h3>
-            <p className="text-sm text-gray-500">{formatSymbol(item.symbol)}</p>
+            <p className="text-sm text-gray-500">{item.displayName}</p>
           </div>
           
           {/* Status Indicator */}
@@ -121,7 +133,7 @@ const MarketCard = ({ item, index }: { item: MarketItem; index: number }) => {
             <span className={`text-sm font-semibold ${
               isPositive ? 'text-green-600' : 'text-red-600'
             }`}>
-              {isPositive ? '↑' : '↓'} {Math.abs(item.percentChange).toFixed(2)}%
+              {isPositive ? '▲' : '▼'} {Math.abs(item.percentChange).toFixed(2)}%
             </span>
           </div>
         </div>
@@ -149,6 +161,23 @@ const MarketCard = ({ item, index }: { item: MarketItem; index: number }) => {
             })}
           </div>
         </div>
+
+        {showOhlc && (
+          <div className="mt-4 grid grid-cols-3 gap-3 text-[10px] uppercase tracking-[0.2em] text-gray-500">
+            <div className="space-y-1">
+              <p>Open</p>
+              <p className="text-sm font-semibold text-gray-900">{formatPrice(item.symbol, item.open)}</p>
+            </div>
+            <div className="space-y-1">
+              <p>Low</p>
+              <p className="text-sm font-semibold text-gray-900">{formatPrice(item.symbol, item.low)}</p>
+            </div>
+            <div className="space-y-1">
+              <p>Close</p>
+              <p className="text-sm font-semibold text-gray-900">{formatPrice(item.symbol, item.last)}</p>
+            </div>
+          </div>
+        )}
         
         {/* Footer */}
         <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
@@ -164,21 +193,53 @@ const MarketCard = ({ item, index }: { item: MarketItem; index: number }) => {
   );
 };
 
-export default function Market() {
+export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
   const [marketData, setMarketData] = useState<MarketItem[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isReconnecting, setIsReconnecting] = useState(false);
   const prevDataRef = useRef<MarketItem[]>([]);
   const { t } = useTranslation('market');
+
+  const SYMBOL_LABELS: Record<string, string> = {
+    HKK50: 'Hanseng',
+    JPK50: 'Nikkei',
+    XUL10: 'Gold',
+    BCO10: 'BCO',
+    AU1010: 'AUD/USD',
+    EU1010: 'EUR/USD',
+    GU1010: 'GBP/USD',
+    UC1010: 'USD/CHF',
+    UJ1010: 'USD/JPY',
+  };
+
+  const normalizeBaseSymbol = (symbol: string) => {
+    if (!symbol) return '';
+    const withoutPrefix = symbol.replace(/^(IDR|USD)/i, '');
+    const beforeSuffix = withoutPrefix.split('_')[0] ?? '';
+    return beforeSuffix.toUpperCase().trim();
+  };
 
   useEffect(() => {
     const disconnectSocket = connectMarketSocket({
       onData: (ticks: MarketTick[]) => {
-        const processedData = ticks.map((item) => ({
-          symbol: item.symbol || '',
-          last: Number(item.last) || 0,
-          percentChange: Number(item.percentChange) || 0
-        }));
+        const processedData = ticks
+          .map((item) => {
+            const symbol = item.symbol || '';
+            const base = normalizeBaseSymbol(symbol);
+            const displayName = SYMBOL_LABELS[base];
+            if (!displayName) return null;
+
+            return {
+              symbol,
+              displayName,
+              last: Number(item.last) || 0,
+              percentChange: Number(item.percentChange) || 0,
+              open: item.open ?? null,
+              high: item.high ?? null,
+              low: item.low ?? null
+            };
+          })
+          .filter(Boolean) as MarketItem[];
 
         const dataWithDirection = processedData.map((item: MarketItem) => {
           const prevItem = prevDataRef.current.find(prev => prev.symbol === item.symbol);
@@ -194,12 +255,14 @@ export default function Market() {
         
         setMarketData(dataWithDirection);
         prevDataRef.current = dataWithDirection;
-        setErrorMessage('');
         setIsLoading(false);
+        setIsReconnecting(false);
       },
-      onError: (message) => {
-        setErrorMessage(message || t('error'));
-        setIsLoading(false);
+      onError: () => {
+        setIsReconnecting(true);
+        if (prevDataRef.current.length === 0) {
+          setIsLoading(true);
+        }
       }
     });
 
@@ -245,35 +308,24 @@ export default function Market() {
               </div>
             ))}
           </div>
-        ) : errorMessage ? (
-          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-2xl mx-auto">
-            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {t('errorLoading', 'Gagal Memuat Data')}
-            </h3>
-            <p className="text-gray-600 mb-6">{errorMessage}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="px-6 py-2.5 bg-[#FF0000] hover:bg-[#CC0000] text-white font-medium rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg"
-            >
-              {t('reload', 'Muat Ulang')}
-            </button>
-          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <AnimatePresence>
               {marketData.map((item, index) => (
-                <MarketCard key={`${item.symbol}-${index}`} item={item} index={index} />
+                <MarketCard key={`${item.symbol}-${index}`} item={item} index={index} showOhlc={showOhlc} />
               ))}
             </AnimatePresence>
           </div>
         )}
         
-        <div className="mt-12">
+        <div className="mt-12 space-y-3">
+          {isReconnecting && (
+            <div className="mx-auto max-w-md">
+              <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full w-1/3 bg-gradient-to-r from-[#080031] to-[#FF0000] rounded-full animate-pulse" />
+              </div>
+            </div>
+          )}
           <LastUpdatedTime />
         </div>
       </div>
