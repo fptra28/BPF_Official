@@ -16,6 +16,17 @@ interface MarketRow {
   direction: Direction;
 }
 
+const ORDERED_BASES = ["AU1010", "BCO10", "EU1010", "GU1010", "HKK50", "JPK50", "UC1010", "UJ1010", "XUL10"] as const;
+const ALLOWED_BASES = new Set<string>(ORDERED_BASES);
+const BASE_ORDER_INDEX = new Map<string, number>(ORDERED_BASES.map((b, i) => [b, i]));
+
+const normalizeBaseSymbol = (symbol: string) => {
+  if (!symbol) return "";
+  const withoutPrefix = symbol.replace(/^(IDR|USD)/i, "");
+  const beforeSuffix = withoutPrefix.split("_")[0] ?? "";
+  return beforeSuffix.toUpperCase().trim();
+};
+
 const formatSymbol = (symbol: string) => {
   if (!symbol) return "";
   return symbol.replace(/^(IDR|USD)/, "").trim();
@@ -55,43 +66,49 @@ export default function LiveQuotesTable() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const disconnectSocket = connectMarketSocket({
-      onData: (ticks: MarketTick[]) => {
-        const nextRows: MarketRow[] = ticks.map((tick) => {
-          const symbol = tick.symbol || "";
-          const last = Number(tick.last) || 0;
-          const prevLast = prevLastRef.current.get(symbol);
-          let direction: Direction = "neutral";
-          if (prevLast !== undefined) {
-            if (last > prevLast) direction = "up";
-            else if (last < prevLast) direction = "down";
-          }
-          prevLastRef.current.set(symbol, last);
+	  useEffect(() => {
+	    const disconnectSocket = connectMarketSocket({
+	      onData: (ticks: MarketTick[]) => {
+	        const nextRows: MarketRow[] = ticks
+	          .filter((tick) => ALLOWED_BASES.has(normalizeBaseSymbol(tick.symbol || "")))
+	          .map((tick) => {
+	            const symbol = tick.symbol || "";
+	            const last = Number(tick.last) || 0;
+	            const prevLast = prevLastRef.current.get(symbol);
+	            let direction: Direction = "neutral";
+	            if (prevLast !== undefined) {
+	              if (last > prevLast) direction = "up";
+	              else if (last < prevLast) direction = "down";
+	            }
+	            prevLastRef.current.set(symbol, last);
 
-          return {
-            symbol,
-            last,
-            percentChange: Number(tick.percentChange) || 0,
-            open: tick.open ?? null,
-            high: tick.high ?? null,
-            low: tick.low ?? null,
-            buy: tick.buy ?? null,
-            sell: tick.sell ?? null,
-            direction,
-          };
-        });
+	            return {
+	              symbol,
+	              last,
+	              percentChange: Number(tick.percentChange) || 0,
+	              open: tick.open ?? null,
+	              high: tick.high ?? null,
+	              low: tick.low ?? null,
+	              buy: tick.buy ?? null,
+	              sell: tick.sell ?? null,
+	              direction,
+	            };
+	          });
 
-        nextRows.sort((a, b) => a.symbol.localeCompare(b.symbol));
-        setRows(nextRows);
-        setIsLoading(false);
-        setIsReconnecting(false);
-      },
-      onError: () => {
-        setIsReconnecting(true);
-        if (rows.length === 0) setIsLoading(true);
-      },
-    });
+	        nextRows.sort((a, b) => {
+	          const ai = BASE_ORDER_INDEX.get(normalizeBaseSymbol(a.symbol)) ?? Number.MAX_SAFE_INTEGER;
+	          const bi = BASE_ORDER_INDEX.get(normalizeBaseSymbol(b.symbol)) ?? Number.MAX_SAFE_INTEGER;
+	          return ai - bi;
+	        });
+	        setRows(nextRows);
+	        setIsLoading(false);
+	        setIsReconnecting(false);
+	      },
+	      onError: () => {
+	        setIsReconnecting(true);
+	        if (prevLastRef.current.size === 0) setIsLoading(true);
+	      },
+	    });
 
     return () => {
       disconnectSocket();
