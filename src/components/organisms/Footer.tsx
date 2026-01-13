@@ -71,7 +71,7 @@ const Footer = () => {
     const legal = t('legal', 'Legalitas');
     const headOffice = t('headOffice', 'Kantor Pusat');
     const address = t('address', 'Equity Tower Lt. 47, Kawasan Niaga Terpadu Sudirman (SCBD) Jl. Jend. Sudirman Kav. 52-53 Jakarta 12190');
-    const komdigiDesc = t('komdigiDesc', 'Terdaftar dan diawasi oleh Kementerian Komunikasi dan Informatika Republik Indonesia');
+    const komdigiDesc = t('komdigiDesc', 'Terdaftar dan diawasi oleh Kementerian Komunikasi dan Digital Republik Indonesia');
     const isoDesc = t('isoDesc', 'Bersertifikat ISO');
     const copyright = t('copyright', '&copy; {{year}} PT. BestProfit Futures. All rights reserved.');
     const termsConditions = t('termsConditions', 'Syarat & Ketentuan');
