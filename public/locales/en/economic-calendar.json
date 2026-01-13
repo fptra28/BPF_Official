@@ -6,6 +6,19 @@
     "previousWeek": "Previous Week",
     "nextWeek": "Next Week"
   },
+  "details": {
+    "title": "Event Details",
+    "close": "Close",
+    "sources": "Source",
+    "measures": "Measures",
+    "usualEffect": "Usual Effect",
+    "frequency": "Frequency",
+    "nextReleased": "Next Release",
+    "notes": "Notes",
+    "whyTraderCare": "Why Traders Care",
+    "history": "History",
+    "historyNote": "Showing up to the last 10 items."
+  },
   "table": {
     "date": "Date",
     "time": "Time",

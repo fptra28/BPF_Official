@@ -6,6 +6,20 @@
     "previousWeek": "Minggu Lalu",
     "nextWeek": "Minggu Depan"
   },
+  "noDataMessage": "Tidak ada data untuk filter ini.",
+  "details": {
+    "title": "Detail Event",
+    "close": "Tutup",
+    "sources": "Sumber",
+    "measures": "Mengukur",
+    "usualEffect": "Efek Umum",
+    "frequency": "Frekuensi",
+    "nextReleased": "Rilis Berikutnya",
+    "notes": "Catatan",
+    "whyTraderCare": "Kenapa Penting",
+    "history": "Riwayat",
+    "historyNote": "Menampilkan maksimal 10 data terakhir."
+  },
   "table": {
     "date": "Tanggal",
     "time": "Waktu",
