@@ -16,15 +16,59 @@ interface MarketRow {
   direction: Direction;
 }
 
-const ORDERED_BASES = ["AU1010", "BCO10", "EU1010", "GU1010", "HKK50", "JPK50", "UC1010", "UJ1010", "XUL10"] as const;
-const ALLOWED_BASES = new Set<string>(ORDERED_BASES);
+const ORDERED_BASES = ["XUL10", "BCO10", "HKK50", "JPK50", "AU10F", "EU10F", "GU10F", "UC10F", "UJ10F"] as const;
+const ORDERED_BASES_SET = new Set<string>(ORDERED_BASES);
 const BASE_ORDER_INDEX = new Map<string, number>(ORDERED_BASES.map((b, i) => [b, i]));
+const CANONICAL_BASE_MAP: Record<string, string> = {
+  AU1010: "AU10F",
+  EU1010: "EU10F",
+  GU1010: "GU10F",
+  UC1010: "UC10F",
+  UJ1010: "UJ10F",
+  HKK5U: "HKK50",
+  JPK5U: "JPK50",
+  XULF: "XUL10",
+};
 
 const normalizeBaseSymbol = (symbol: string) => {
   if (!symbol) return "";
   const withoutPrefix = symbol.replace(/^(IDR|USD)/i, "");
   const beforeSuffix = withoutPrefix.split("_")[0] ?? "";
   return beforeSuffix.toUpperCase().trim();
+};
+
+const canonicalizeBaseSymbol = (baseSymbol: string) => {
+  return CANONICAL_BASE_MAP[baseSymbol] ?? baseSymbol;
+};
+
+const canonicalizeFullSymbol = (symbol: string) => {
+  if (!symbol) return "";
+  const prefixMatch = symbol.match(/^(IDR|USD)/i)?.[0] ?? "";
+  const rest = symbol.replace(/^(IDR|USD)/i, "");
+  const base = normalizeBaseSymbol(symbol);
+  const canonical = canonicalizeBaseSymbol(base);
+  if (!base || base === canonical) return symbol;
+  const replaced = rest.replace(new RegExp(`^${base}`, "i"), canonical);
+  return `${prefixMatch}${replaced}`;
+};
+
+const SYMBOL_PREFERENCE: Record<string, RegExp> = {
+  XUL10: /^XUL10_/i,
+  BCO10: /^BCO10_/i,
+  HKK50: /^HKK50_/i,
+  JPK50: /^JPK50_/i,
+  AU10F: /^AU10F_/i,
+  EU10F: /^EU10F_/i,
+  GU10F: /^GU10F_/i,
+  UC10F: /^UC10F_/i,
+  UJ10F: /^UJ10F_/i,
+};
+
+const pickPreferredTick = (canonicalBase: string, ticks: MarketTick[]) => {
+  const pattern = SYMBOL_PREFERENCE[canonicalBase];
+  if (!pattern) return ticks[0] ?? null;
+  const preferred = ticks.find((t) => pattern.test((t.symbol || "").replace(/^(IDR|USD)/i, "")));
+  return preferred ?? ticks[0] ?? null;
 };
 
 const formatSymbol = (symbol: string) => {
@@ -69,37 +113,45 @@ export default function LiveQuotesTable() {
 	  useEffect(() => {
 	    const disconnectSocket = connectMarketSocket({
 	      onData: (ticks: MarketTick[]) => {
-	        const nextRows: MarketRow[] = ticks
-	          .filter((tick) => ALLOWED_BASES.has(normalizeBaseSymbol(tick.symbol || "")))
-	          .map((tick) => {
-	            const symbol = tick.symbol || "";
-	            const last = Number(tick.last) || 0;
-	            const prevLast = prevLastRef.current.get(symbol);
-	            let direction: Direction = "neutral";
-	            if (prevLast !== undefined) {
-	              if (last > prevLast) direction = "up";
-	              else if (last < prevLast) direction = "down";
-	            }
-	            prevLastRef.current.set(symbol, last);
+	        const grouped = new Map<string, MarketTick[]>();
+	        for (const tick of ticks) {
+	          const canonicalBase = canonicalizeBaseSymbol(normalizeBaseSymbol(tick.symbol || ""));
+	          if (!ORDERED_BASES_SET.has(canonicalBase)) continue;
+	          const existing = grouped.get(canonicalBase);
+	          if (existing) existing.push(tick);
+	          else grouped.set(canonicalBase, [tick]);
+	        }
 
-	            return {
-	              symbol,
-	              last,
-	              percentChange: Number(tick.percentChange) || 0,
-	              open: tick.open ?? null,
-	              high: tick.high ?? null,
-	              low: tick.low ?? null,
-	              buy: tick.buy ?? null,
-	              sell: tick.sell ?? null,
-	              direction,
-	            };
+	        const nextRows: MarketRow[] = [];
+	        for (const canonicalBase of ORDERED_BASES) {
+	          const candidates = grouped.get(canonicalBase);
+	          if (!candidates || candidates.length === 0) continue;
+	          const chosen = pickPreferredTick(canonicalBase, candidates);
+	          if (!chosen) continue;
+
+	          const symbol = canonicalizeFullSymbol(chosen.symbol || "");
+	          const last = Number(chosen.last) || 0;
+	          const prevLast = prevLastRef.current.get(canonicalBase);
+	          let direction: Direction = "neutral";
+	          if (prevLast !== undefined) {
+	            if (last > prevLast) direction = "up";
+	            else if (last < prevLast) direction = "down";
+	          }
+	          prevLastRef.current.set(canonicalBase, last);
+
+	          nextRows.push({
+	            symbol,
+	            last,
+	            percentChange: Number(chosen.percentChange) || 0,
+	            open: chosen.open ?? null,
+	            high: chosen.high ?? null,
+	            low: chosen.low ?? null,
+	            buy: chosen.buy ?? null,
+	            sell: chosen.sell ?? null,
+	            direction,
 	          });
+	        }
 
-	        nextRows.sort((a, b) => {
-	          const ai = BASE_ORDER_INDEX.get(normalizeBaseSymbol(a.symbol)) ?? Number.MAX_SAFE_INTEGER;
-	          const bi = BASE_ORDER_INDEX.get(normalizeBaseSymbol(b.symbol)) ?? Number.MAX_SAFE_INTEGER;
-	          return ai - bi;
-	        });
 	        setRows(nextRows);
 	        setIsLoading(false);
 	        setIsReconnecting(false);

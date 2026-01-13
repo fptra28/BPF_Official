@@ -200,6 +200,31 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
   const prevDataRef = useRef<MarketItem[]>([]);
   const { t } = useTranslation('market');
 
+  const ORDERED_BASES = ['XUL10', 'BCO10', 'HKK50', 'JPK50', 'AU10F', 'EU10F', 'GU10F', 'UC10F', 'UJ10F'] as const;
+  const BASE_ORDER_INDEX = new Map<string, number>(ORDERED_BASES.map((b, i) => [b, i]));
+  const ORDERED_BASES_SET = new Set<string>(ORDERED_BASES);
+  const CANONICAL_BASE_MAP: Record<string, string> = {
+    AU1010: 'AU10F',
+    EU1010: 'EU10F',
+    GU1010: 'GU10F',
+    UC1010: 'UC10F',
+    UJ1010: 'UJ10F',
+    HKK5U: 'HKK50',
+    JPK5U: 'JPK50',
+    XULF: 'XUL10',
+  };
+  const SYMBOL_PREFERENCE: Record<string, RegExp> = {
+    XUL10: /^XUL10_/i,
+    BCO10: /^BCO10_/i,
+    HKK50: /^HKK50_/i,
+    JPK50: /^JPK50_/i,
+    AU10F: /^AU10F_/i,
+    EU10F: /^EU10F_/i,
+    GU10F: /^GU10F_/i,
+    UC10F: /^UC10F_/i,
+    UJ10F: /^UJ10F_/i,
+  };
+
   const SYMBOL_LABELS: Record<string, string> = {
     HKK50: 'Hanseng',
     JPK50: 'Nikkei',
@@ -210,6 +235,11 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
     GU1010: 'GBP/USD',
     UC1010: 'USD/CHF',
     UJ1010: 'USD/JPY',
+    AU10F: 'AUD/USD',
+    EU10F: 'EUR/USD',
+    GU10F: 'GBP/USD',
+    UC10F: 'USD/CHF',
+    UJ10F: 'USD/JPY',
   };
 
   const normalizeBaseSymbol = (symbol: string) => {
@@ -219,27 +249,59 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
     return beforeSuffix.toUpperCase().trim();
   };
 
+  const canonicalizeBaseSymbol = (baseSymbol: string) => {
+    return CANONICAL_BASE_MAP[baseSymbol] ?? baseSymbol;
+  };
+
+  const canonicalizeFullSymbol = (symbol: string) => {
+    if (!symbol) return '';
+    const prefixMatch = symbol.match(/^(IDR|USD)/i)?.[0] ?? '';
+    const rest = symbol.replace(/^(IDR|USD)/i, '');
+    const base = normalizeBaseSymbol(symbol);
+    const canonical = canonicalizeBaseSymbol(base);
+    if (!base || base === canonical) return symbol;
+    const replaced = rest.replace(new RegExp(`^${base}`, 'i'), canonical);
+    return `${prefixMatch}${replaced}`;
+  };
+
+  const pickPreferredTick = (canonicalBase: string, ticks: MarketTick[]) => {
+    const pattern = SYMBOL_PREFERENCE[canonicalBase];
+    if (!pattern) return ticks[0] ?? null;
+    const preferred = ticks.find((t) => pattern.test((t.symbol || '').replace(/^(IDR|USD)/i, '')));
+    return preferred ?? ticks[0] ?? null;
+  };
+
   useEffect(() => {
     const disconnectSocket = connectMarketSocket({
       onData: (ticks: MarketTick[]) => {
-        const processedData = ticks
-          .map((item) => {
-            const symbol = item.symbol || '';
-            const base = normalizeBaseSymbol(symbol);
-            const displayName = SYMBOL_LABELS[base];
-            if (!displayName) return null;
+        const grouped = new Map<string, MarketTick[]>();
+        for (const tick of ticks) {
+          const canonicalBase = canonicalizeBaseSymbol(normalizeBaseSymbol(tick.symbol || ''));
+          if (!ORDERED_BASES_SET.has(canonicalBase)) continue;
+          const existing = grouped.get(canonicalBase);
+          if (existing) existing.push(tick);
+          else grouped.set(canonicalBase, [tick]);
+        }
 
-            return {
-              symbol,
-              displayName,
-              last: Number(item.last) || 0,
-              percentChange: Number(item.percentChange) || 0,
-              open: item.open ?? null,
-              high: item.high ?? null,
-              low: item.low ?? null
-            };
-          })
-          .filter(Boolean) as MarketItem[];
+        const processedData: MarketItem[] = [];
+        for (const canonicalBase of ORDERED_BASES) {
+          const candidates = grouped.get(canonicalBase);
+          if (!candidates || candidates.length === 0) continue;
+          const chosen = pickPreferredTick(canonicalBase, candidates);
+          if (!chosen) continue;
+
+          const displayName = SYMBOL_LABELS[canonicalBase];
+          if (!displayName) continue;
+          processedData.push({
+            symbol: canonicalizeFullSymbol(chosen.symbol || ''),
+            displayName,
+            last: Number(chosen.last) || 0,
+            percentChange: Number(chosen.percentChange) || 0,
+            open: chosen.open ?? null,
+            high: chosen.high ?? null,
+            low: chosen.low ?? null,
+          });
+        }
 
         const dataWithDirection = processedData.map((item: MarketItem) => {
           const prevItem = prevDataRef.current.find(prev => prev.symbol === item.symbol);
@@ -251,6 +313,14 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
           }
           
           return { ...item, direction };
+        });
+
+        dataWithDirection.sort((a, b) => {
+          const ai =
+            BASE_ORDER_INDEX.get(canonicalizeBaseSymbol(normalizeBaseSymbol(a.symbol))) ?? Number.MAX_SAFE_INTEGER;
+          const bi =
+            BASE_ORDER_INDEX.get(canonicalizeBaseSymbol(normalizeBaseSymbol(b.symbol))) ?? Number.MAX_SAFE_INTEGER;
+          return ai - bi;
         });
         
         setMarketData(dataWithDirection);
@@ -312,7 +382,7 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <AnimatePresence>
               {marketData.map((item, index) => (
-                <MarketCard key={`${item.symbol}-${index}`} item={item} index={index} showOhlc={showOhlc} />
+                <MarketCard key={item.symbol} item={item} index={index} showOhlc={showOhlc} />
               ))}
             </AnimatePresence>
           </div>
