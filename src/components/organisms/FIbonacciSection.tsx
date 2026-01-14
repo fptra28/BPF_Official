@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Image from "next/image";
 import { useTranslation } from 'next-i18next';
 
 // Definisikan tipe untuk hasil perhitungan
@@ -57,26 +56,9 @@ const CalculatorSection = ({ trend }: { trend: 'Uptrend' | 'Downtrend' }) => {
 
     const formatNumber = (num: number | undefined) => num !== undefined ? num.toFixed(2) : "0.00";
     const isUptrend = trend === 'Uptrend';
-    const gradient = isUptrend 
-        ? 'from-[#080031] to-[#333366]' 
-        : 'from-[#080031] to-[#333366]';
-    const bgColor = isUptrend ? 'bg-gray-50' : 'bg-gray-50';
-    const borderColor = isUptrend ? 'border-gray-200' : 'border-gray-200';
 
     return (
         <div className={`bg-white p-6 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-300 h-full`}>
-            <div className="mb-6">
-                <div className="text-center mb-2">
-                </div>
-                <Image
-                    src={`/assets/${isUptrend ? 'up-trend.png' : 'down-trend.png'}`}
-                    alt={isUptrend ? 'Uptrend' : 'Downtrend'}
-                    width={500}
-                    height={200}
-                    className="rounded-md w-full object-contain"
-                />
-            </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="space-y-1">
                     <label className="block text-sm font-medium text-gray-600">
