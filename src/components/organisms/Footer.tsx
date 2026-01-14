@@ -143,9 +143,9 @@ const Footer = () => {
                             </div>
                             <div className="flex items-center group">
                                 <Icons.Phone />
-                                <a href="tel:+622129035005" className="ml-3 text-sm text-black hover:text-[#FF0000] transition-colors">
-                                +62 21 2903 5005
-                                </a>
+                                <div className="ml-3 text-sm text-black">
+                                    <span>Fax: 021 - 29035132</span>
+                                </div>
                             </div>
                             <div className="flex items-center group">
                                 <Icons.Envelope />
