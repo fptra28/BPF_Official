@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useTranslation } from 'next-i18next';
 import { getHistoricalData, type HistoricalDataItem, type SymbolData, type HistoricalDataResponse } from '@/services/historicalDataService';
 import { FiFilter, FiDownload } from 'react-icons/fi';
+import Image from "next/image";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface HistoricalData extends Omit<HistoricalDataItem, 'open' | 'high' | 'low' | 'close'> {
     open: string;
@@ -13,56 +16,113 @@ interface HistoricalData extends Omit<HistoricalDataItem, 'open' | 'high' | 'low
     tanggal?: string;
 }
 
+const isHiddenInstrument = (instrument: string): boolean => {
+    const key = (instrument || '').trim().toUpperCase();
+    return key === 'LSI' || key === 'LSI DAILY';
+};
+
+const loadImageAsDataUrl = async (src: string): Promise<string> => {
+    const response = await fetch(src);
+    if (!response.ok) {
+        throw new Error(`Failed to load image: ${src}`);
+    }
+    const blob = await response.blob();
+    return await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error(`Failed to read image: ${src}`));
+        reader.readAsDataURL(blob);
+    });
+};
+
+const renderPdfWatermark = async (doc: jsPDF) => {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    const imgData = await loadImageAsDataUrl('/assets/bpf-logo.png');
+    const anyDoc = doc as any;
+
+    if (typeof anyDoc.GState === 'function' && typeof anyDoc.setGState === 'function') {
+        anyDoc.setGState(new anyDoc.GState({ opacity: 0.08 }));
+    }
+
+    const imgSize = Math.min(pageWidth, pageHeight) * 0.72;
+    doc.addImage(
+        imgData,
+        'PNG',
+        (pageWidth - imgSize) / 2,
+        (pageHeight - imgSize) / 2,
+        imgSize,
+        imgSize
+    );
+
+    if (typeof anyDoc.GState === 'function' && typeof anyDoc.setGState === 'function') {
+        anyDoc.setGState(new anyDoc.GState({ opacity: 1 }));
+    }
+};
+
 /**
  * Parses a date string in format 'DD MMM YYYY' or 'YYYY-MM-DD' to a Date object
  */
-const parseDate = (dateString: string): Date | null => {
+const normalizeDateKey = (dateString: string): string | null => {
     if (!dateString) return null;
-    
-    // Try parsing 'DD MMM YYYY' format first (e.g., '30 Sep 2025')
+
+    // 'YYYY-MM-DD' (or 'YYYY-M-D') format
+    const isoMatch = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:$|T)/);
+    if (isoMatch) {
+        const year = isoMatch[1];
+        const month = isoMatch[2].padStart(2, '0');
+        const day = isoMatch[3].padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // 'DD MMM YYYY' format (e.g., '30 Sep 2025')
     const dateParts = dateString.match(/^(\d{1,2})\s(\w{3})\s(\d{4})$/);
     if (dateParts) {
-        const months: { [key: string]: number } = {
-            'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-            'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+        const months: Record<string, number> = {
+            Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
+            Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12
         };
-        
-        const day = parseInt(dateParts[1], 10);
-        const month = months[dateParts[2]];
-        const year = parseInt(dateParts[3], 10);
-        
-        if (isNaN(day) || isNaN(year) || month === undefined) {
+
+        const day = dateParts[1].padStart(2, '0');
+        const monthNumber = months[dateParts[2]];
+        const year = dateParts[3];
+
+        if (!monthNumber) {
             console.error('Invalid date format:', dateString);
             return null;
         }
-        
-        return new Date(year, month, day);
+
+        return `${year}-${String(monthNumber).padStart(2, '0')}-${day}`;
     }
-    
-    // Try parsing 'YYYY-MM-DD' format
-    const isoMatch = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
-    if (isoMatch) {
-        const year = parseInt(isoMatch[1], 10);
-        const month = parseInt(isoMatch[2], 10) - 1; // months are 0-indexed
-        const day = parseInt(isoMatch[3], 10);
-        
-        if (isNaN(year) || isNaN(month) || isNaN(day)) {
-            console.error('Invalid date format:', dateString);
-            return null;
-        }
-        
-        return new Date(year, month, day);
-    }
-    
-    console.error('Unsupported date format:', dateString);
+
     return null;
+};
+
+const parseDateUtc = (dateString: string): Date | null => {
+    if (!dateString) return null;
+    const normalized = normalizeDateKey(dateString);
+    if (!normalized) {
+        console.error('Unsupported date format:', dateString);
+        return null;
+    }
+
+    const match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return null;
+
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return null;
+    return new Date(Date.UTC(year, month - 1, day));
 };
 
 /**
  * Formats a date string to 'DD MMM YYYY' format in Asia/Jakarta timezone
  */
 const formatDate = (dateString: string): string => {
-    const date = parseDate(dateString);
+    const date = parseDateUtc(dateString);
     if (!date) return dateString;
     
     try {
@@ -85,6 +145,7 @@ const transformData = (apiData: SymbolData[]): HistoricalData[] => {
     return apiData.flatMap(symbolData => 
         symbolData.data.map(item => ({
             ...item,
+            // Show values as-is from API (no rounding/padding)
             open: item.open?.toString() || '',
             high: item.high?.toString() || '',
             low: item.low?.toString() || '',
@@ -119,12 +180,14 @@ const HistoricalDataContent = () => {
                 setApiData(response.data);
                 
                 // Transform API data to match the expected format
-                const transformedData = transformData(response.data).filter((item) => item.category !== 'LSI Daily');
+                const transformedData = transformData(response.data).filter((item) => !isHiddenInstrument(item.category));
                 
                 // Sort data by date (newest first)
-                const sortedData = [...transformedData].sort(
-                    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-                );
+                const sortedData = [...transformedData].sort((a, b) => {
+                    const timeA = parseDateUtc(a.date)?.getTime() ?? 0;
+                    const timeB = parseDateUtc(b.date)?.getTime() ?? 0;
+                    return timeB - timeA;
+                });
                 
                 // Define the instrument order
                 const instrumentOrder = [
@@ -141,7 +204,7 @@ const HistoricalDataContent = () => {
                 
                 // Get unique instruments from the API response
                 const uniqueInstruments = Array.from(new Set(response.data.map(item => item.symbol))).filter(
-                    (symbol) => symbol !== 'LSI Daily'
+                    (symbol) => !isHiddenInstrument(symbol)
                 );
                 
                 // Sort the instruments based on the defined order
@@ -211,21 +274,20 @@ const HistoricalDataContent = () => {
             
             // Filter by date range
             if (fromDate) {
-                const startDate = new Date(fromDate);
-                startDate.setHours(0, 0, 0, 0);
+                const startKey = normalizeDateKey(fromDate);
                 result = result.filter(item => {
-                    const itemDate = new Date(item.date);
-                    itemDate.setHours(0, 0, 0, 0);
-                    return itemDate >= startDate;
+                    const itemKey = normalizeDateKey(item.date);
+                    if (!startKey || !itemKey) return true;
+                    return itemKey >= startKey;
                 });
             }
             
             if (toDate) {
-                const endDate = new Date(toDate);
-                endDate.setHours(23, 59, 59, 999);
+                const endKey = normalizeDateKey(toDate);
                 result = result.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return itemDate <= endDate;
+                    const itemKey = normalizeDateKey(item.date);
+                    if (!endKey || !itemKey) return true;
+                    return itemKey <= endKey;
                 });
             }
             
@@ -266,8 +328,7 @@ const HistoricalDataContent = () => {
                 t('table.open'),
                 t('table.high'),
                 t('table.low'),
-                t('table.close'),
-                ...(selectedInstrument === 'SNI Daily' ? [t('table.change'), t('table.volume')] : [])
+                t('table.close')
             ];
             const header = `${headerColumns.join(',')}\n`;
             
@@ -284,10 +345,6 @@ const HistoricalDataContent = () => {
                     formatValue(row.close),
                 ];
 
-                if (selectedInstrument === 'SNI Daily') {
-                    baseRow.push(formatValue(row.change), formatValue(row.volume));
-                }
-
                 return baseRow.join(',');
             }).join('\n');
 
@@ -303,6 +360,65 @@ const HistoricalDataContent = () => {
         } catch (err) {
             console.error('Error downloading data:', err);
             setError('Gagal mengunduh data. ' + (err instanceof Error ? err.message : ''));
+        }
+    };
+
+    const handleDownloadPdf = async () => {
+        try {
+            // PDF download is per current page (matches UI pagination)
+            const dataToDownload = [...currentItems];
+            if (dataToDownload.length === 0) {
+                throw new Error('Tidak ada data yang tersedia untuk diunduh');
+            }
+
+            const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+
+            doc.setTextColor(8, 0, 49);
+            doc.setFontSize(16);
+            doc.text('Data Historis', pageWidth / 2, 44, { align: 'center' });
+
+            doc.setFontSize(10);
+            doc.setTextColor(60, 60, 60);
+            doc.text(`Instrument: ${selectedInstrument || '-'}`, 40, 64);
+            if (fromDate || toDate) {
+                doc.text(`Periode: ${fromDate || '-'} s/d ${toDate || '-'}`, 40, 80);
+            }
+            doc.text(`Halaman: ${currentPage} / ${totalPages || 1}`, pageWidth - 40, 64, { align: 'right' });
+
+            const head = [['Date', 'Open', 'High', 'Low', 'Close']];
+            const body = dataToDownload.map((row) => [
+                formatDate(row.date),
+                row.open,
+                row.high,
+                row.low,
+                row.close,
+            ]);
+
+            autoTable(doc, {
+                head,
+                body,
+                startY: fromDate || toDate ? 96 : 80,
+                styles: { fontSize: 9, cellPadding: 6 },
+                headStyles: { fillColor: [8, 0, 49], textColor: 255 },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                margin: { left: 40, right: 40 },
+            });
+
+            // Watermark overlay (best-effort) so it stays visible like the UI watermark.
+            try {
+                await renderPdfWatermark(doc);
+            } catch (e) {
+                console.warn('Failed to render PDF watermark:', e);
+            }
+
+            const fileDate = new Date().toISOString().split('T')[0];
+            const safeInstrument = (selectedInstrument || 'all').replace(/[^\w\-]+/g, '-');
+            doc.save(`historical-data-${safeInstrument}-page-${currentPage}-${fileDate}.pdf`);
+        } catch (err) {
+            console.error('Error downloading PDF:', err);
+            setError('Gagal mengunduh PDF. ' + (err instanceof Error ? err.message : ''));
         }
     };
 
@@ -383,14 +499,24 @@ const HistoricalDataContent = () => {
                 
                 {/* Download Button */}
                 <div className="flex justify-end">
-                    <button
-                        onClick={() => handleDownload(true)}
-                        disabled={isLoading || filteredData.length === 0}
-                        className="px-3 py-1.5 bg-[#FF0000] text-white rounded-md hover:bg-[#E60000] transition-colors text-xs md:text-sm whitespace-nowrap w-full md:w-auto flex items-center gap-1.5 justify-center"
-                    >
-                        <FiDownload className="w-3.5 h-3.5" />
-                        Download All
-                    </button>
+                    <div className="flex gap-2 w-full md:w-auto">
+                        <button
+                            onClick={() => handleDownloadPdf()}
+                            disabled={isLoading || filteredData.length === 0}
+                            className="flex-1 md:flex-none px-3 py-1.5 bg-[#FF0000] text-white rounded-md hover:bg-[#E60000] transition-colors text-xs md:text-sm whitespace-nowrap flex items-center gap-1.5 justify-center"
+                        >
+                            <FiDownload className="w-3.5 h-3.5" />
+                            Download PDF (Page)
+                        </button>
+                        <button
+                            onClick={() => handleDownload(true)}
+                            disabled={isLoading || filteredData.length === 0}
+                            className="flex-1 md:flex-none px-3 py-1.5 bg-[#FF0000] text-white rounded-md hover:bg-[#E60000] transition-colors text-xs md:text-sm whitespace-nowrap flex items-center gap-1.5 justify-center"
+                        >
+                            <FiDownload className="w-3.5 h-3.5" />
+                            Download CSV
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -408,8 +534,20 @@ const HistoricalDataContent = () => {
                 </div>
             ) : (
                 /* Data Table */
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div className="overflow-x-auto">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden relative">
+                    {/* Watermark (overlay) */}
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-20">
+                        <Image
+                            src="/assets/bpf-logo.png"
+                            alt="BPF watermark"
+                            width={420}
+                            height={420}
+                            className="opacity-[0.12] select-none"
+                            priority={false}
+                        />
+                    </div>
+
+                    <div className="overflow-x-auto relative z-10">
                         <table className="min-w-full divide-y divide-[#E5E7EB]">
                             <thead className="bg-[#080031]">
                                 <tr>
@@ -428,16 +566,6 @@ const HistoricalDataContent = () => {
                                     <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                         Close
                                     </th>
-                                    {selectedInstrument === 'SNI Daily' && (
-                                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                                            Change
-                                        </th>
-                                    )}
-                                    {selectedInstrument === 'SNI Daily' && (
-                                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                                            Volume
-                                        </th>
-                                    )}
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-[#E5E7EB]">
@@ -458,16 +586,6 @@ const HistoricalDataContent = () => {
                                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
                                             {item.close}
                                         </td>
-                                        {selectedInstrument === 'SNI Daily' && (
-                                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
-                                                {item.change}
-                                            </td>
-                                        )}
-                                        {selectedInstrument === 'SNI Daily' && (
-                                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
-                                                {item.volume ? item.volume.toLocaleString() : '-'}
-                                            </td>
-                                        )}
                                     </tr>
                                 ))}
                             </tbody>
