@@ -123,25 +123,32 @@ export default function BeritaDetail() {
         fetchRelatedBerita();
     }, [fetchRelatedBerita]);
 
-    const formatDate = (inputDate: string) => {
+    const formatDateTime = (inputDate: string) => {
         if (!inputDate) return '';
-        
+
+        const language = i18n.language || router.locale || 'id';
+        const locale = language === 'en' ? 'en-US' : 'id-ID';
+
+        // Normalize "YYYY-MM-DD HH:mm:ss" to an ISO-like string.
+        const normalized = inputDate.replace(
+            /^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2})(:\d{2})?$/,
+            '$1T$2$3'
+        );
+        const parsedDate = new Date(normalized);
+        if (Number.isNaN(parsedDate.getTime())) return inputDate;
+
         const options: Intl.DateTimeFormatOptions = {
             weekday: "long",
             day: "2-digit",
             month: "long",
             year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+            timeZone: 'Asia/Jakarta',
         };
-        
-        const language = i18n.language || router.locale || 'id';
-        const parsedDate = new Date(inputDate);
-        
-        // Fallback if date is invalid
-        if (isNaN(parsedDate.getTime())) {
-            return inputDate;
-        }
-        
-        return parsedDate.toLocaleDateString(language === 'en' ? 'en-US' : 'id-ID', options);
+
+        return `${parsedDate.toLocaleString(locale, options)} WIB`;
     };
 
 
@@ -207,7 +214,7 @@ export default function BeritaDetail() {
                     </div>
                     <div className="prose max-w-none">
                         <div className="flex items-center text-gray-500 text-sm mb-6">
-                            <span>{formatDate(berita.created_at)}</span>
+	                            <span>{formatDateTime(berita.created_at)}</span>
                             {berita.kategori?.name && (
                                 <span className="mx-2">•</span>
                             )}
@@ -320,7 +327,7 @@ export default function BeritaDetail() {
                                                             </div>
                                                         )}
                                                         <div className="text-xs text-gray-500">
-                                                            {formatDate(item.created_at)}
+                                                            {formatDateTime(item.created_at)}
                                                         </div>
                                                     </div>
                                                     <h4 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-[#FF0000] transition-colors line-clamp-2" style={{

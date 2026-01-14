@@ -23,7 +23,7 @@ export default function NewsCard({
     variant = 'default',
     className = '',
 }: NewsCardProps) {
-    const { t } = useTranslation('berita');
+    const { t, i18n } = useTranslation('berita');
 
     // Fungsi untuk memotong teks tanpa memotong di tengah kata
     function stripHtml(html: string = ""): string {
@@ -36,23 +36,36 @@ export default function NewsCard({
         return plainText.length > maxChars ? plainText.slice(0, maxChars).trim() + "..." : plainText;
     }
 
-    const formatDate = (inputDate: string) => {
+    const parseApiDateTime = (inputDate: string): Date | null => {
+        if (!inputDate) return null;
         try {
-            const parsedDate = new Date(inputDate);
-            // Periksa apakah tanggal valid
-            if (isNaN(parsedDate.getTime())) {
-                return inputDate; // Kembalikan nilai asli jika tidak valid
-            }
-            const options: Intl.DateTimeFormatOptions = {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-            };
-            return parsedDate.toLocaleDateString("id-ID", options);
+            // If API sends "YYYY-MM-DD HH:mm:ss", normalize to an ISO-like string.
+            const normalized = inputDate.replace(/^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2})(:\d{2})?$/, '$1T$2$3');
+            const parsed = new Date(normalized);
+            if (Number.isNaN(parsed.getTime())) return null;
+            return parsed;
         } catch (error) {
             console.error('Error formatting date:', error);
-            return inputDate; // Kembalikan nilai asli jika terjadi error
+            return null;
         }
+    };
+
+    const formatDateTime = (inputDate: string) => {
+        const parsedDate = parseApiDateTime(inputDate);
+        if (!parsedDate) return inputDate;
+
+        const locale = i18n.language === 'en' ? 'en-US' : 'id-ID';
+        const options: Intl.DateTimeFormatOptions = {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+            timeZone: 'Asia/Jakarta',
+        };
+
+        return `${parsedDate.toLocaleString(locale, options)} WIB`;
     };
 
     // Pastikan slug tidak mengandung awalan /analisis/berita/
@@ -163,7 +176,7 @@ export default function NewsCard({
                         )}
                     </div>
                     <div className={contentClasses[variant]}>
-                        <p className={dateClasses[variant]}>{formatDate(date)}</p>
+                        <p className={dateClasses[variant]}>{formatDateTime(date)}</p>
                         <h3 className={titleClasses[variant]}>{title}</h3>
                         <p className={excerptClasses[variant]}>{trimmedExcerpt}</p>
                     </div>

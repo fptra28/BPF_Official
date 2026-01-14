@@ -18,9 +18,14 @@ const formatDate = (inputDate: string) => {
         day: "2-digit",
         month: "long",
         year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: 'Asia/Jakarta',
     };
     const parsedDate = new Date(inputDate);
-    return parsedDate.toLocaleDateString("id-ID", options);
+    if (isNaN(parsedDate.getTime())) return inputDate;
+    return `${parsedDate.toLocaleString("id-ID", options)} WIB`;
 };
 
 const getFullImageUrl = (imagePath: string) => {
