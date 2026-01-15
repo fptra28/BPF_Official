@@ -5,6 +5,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import { GetStaticProps } from 'next';
 import { fetchEconomicCalendar, EconomicCalendarFilter, EconomicEvent } from '@/services/economicCalendarService';
+import { downloadEconomicCalendarPdf } from '@/utils/economicCalendarPdf';
+import { getEconomicImpactLevel } from '@/utils/economicImpact';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
@@ -21,6 +23,7 @@ export default function EconomicCalendar() {
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<EconomicCalendarFilter>('today');
   const [selectedEvent, setSelectedEvent] = useState<EconomicEvent | null>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   const filters = [
     { key: 'today', value: t('filters.today') },
@@ -59,6 +62,24 @@ export default function EconomicCalendar() {
     setActiveFilter(filterKey);
   };
 
+  const handleDownloadPdf = async () => {
+    if (loading || events.length === 0 || downloadingPdf) return;
+    const filterLabel = filters.find((filter) => filter.key === activeFilter)?.value ?? activeFilter;
+
+    try {
+      setDownloadingPdf(true);
+      const dateStamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      await downloadEconomicCalendarPdf({
+        events,
+        title: t('title'),
+        filterLabel,
+        filename: `economic-calendar-${activeFilter}-${dateStamp}.pdf`,
+      });
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
+
   useEffect(() => {
     if (!selectedEvent) return;
     const onKeyDown = (e: KeyboardEvent) => {
@@ -89,39 +110,36 @@ export default function EconomicCalendar() {
 
   // Format impact menjadi bintang dengan warna yang sesuai
   const formatImpact = (impact: string) => {
-    const filledStar = '\u2605';
-    const emptyStar = '\u2606';
     const normalizedImpact = String(impact || '').trim();
 
+    const StarIcon = ({ className }: { className: string }) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className={className}
+        aria-hidden="true"
+      >
+        <path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0l-4.725 2.885a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557L2.04 10.386a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345l2.126-5.112z" />
+      </svg>
+    );
+
     const renderLevel = (level: number, colorClass: string) => (
-      <span className={`${colorClass} font-bold`}>
-        {filledStar.repeat(level)}
-        <span className="text-gray-300">{emptyStar.repeat(3 - level)}</span>
+      <span className="inline-flex items-center gap-1" aria-label={`Impact level ${level} of 3`}>
+        {Array.from({ length: 3 }).map((_, index) => (
+          <StarIcon
+            key={index}
+            className={`h-4 w-4 ${index < level ? colorClass : 'text-gray-300'}`}
+          />
+        ))}
       </span>
     );
 
-    if (!normalizedImpact) return renderLevel(1, 'text-gray-300');
-
-    const questionMarks = (normalizedImpact.match(/\?/g) || []).length;
-    const filledStars = (normalizedImpact.match(/\u2605/g) || []).length; // ★
-
-    const levelFromSymbols = Math.min(3, Math.max(questionMarks, filledStars));
-    if (levelFromSymbols > 0) {
-      if (levelFromSymbols >= 3) return renderLevel(3, 'text-[#FF0000]');
-      if (levelFromSymbols === 2) return renderLevel(2, 'text-[#FFA500]');
-      return renderLevel(1, 'text-[#008000]');
-    }
-
-    switch (normalizedImpact.toLowerCase()) {
-      case 'high':
-        return renderLevel(3, 'text-[#FF0000]');
-      case 'medium':
-        return renderLevel(2, 'text-[#FFA500]');
-      case 'low':
-        return renderLevel(1, 'text-[#008000]');
-      default:
-        return renderLevel(1, 'text-gray-300');
-    }
+    const level = getEconomicImpactLevel(normalizedImpact);
+    if (!level) return <span className="text-sm text-gray-400">-</span>;
+    if (level >= 3) return renderLevel(3, 'text-[#FF0000]');
+    if (level === 2) return renderLevel(2, 'text-[#FFA500]');
+    return renderLevel(1, 'text-gray-400');
   };
   return (
     <PageTemplate title={t('title')}>
@@ -129,20 +147,54 @@ export default function EconomicCalendar() {
         <ProfilContainer title={t('title')}>
           <div className="space-y-5">
             {/* Filter Buttons */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {filters.map((filter) => (
-                <button
-                  key={filter.key}
-                  onClick={() => handleFilterClick(filter.key)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeFilter === filter.key
-                      ? 'bg-[#FF0000] text-white shadow-md hover:bg-[#E60000]'
-                      : 'bg-white text-[#080031] border border-[#080031] hover:bg-gray-50'
-                  }`}
-                >
-                  {filter.value}
-                </button>
-              ))}
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+              <div className="flex flex-wrap gap-2">
+                {filters.map((filter) => (
+                  <button
+                    key={filter.key}
+                    onClick={() => handleFilterClick(filter.key)}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      activeFilter === filter.key
+                        ? 'bg-[#FF0000] text-white shadow-md hover:bg-[#E60000]'
+                        : 'bg-white text-[#080031] border border-[#080031] hover:bg-gray-50'
+                    }`}
+                  >
+                    {filter.value}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleDownloadPdf}
+                disabled={loading || events.length === 0 || downloadingPdf}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-[#080031] text-white hover:bg-[#080031]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {downloadingPdf ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    {t('downloadPdf.loading', { defaultValue: 'Menyiapkan PDF...' })}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-4 w-4"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    {t('downloadPdf.label', { defaultValue: 'Download PDF' })}
+                  </span>
+                )}
+              </button>
             </div>
 
             {loading ? (
