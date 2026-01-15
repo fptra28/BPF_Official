@@ -19,7 +19,11 @@ export default function LiveQuotesPage() {
   return (
     <PageTemplate title={t("marketTitle")}>
       <div className="px-4 sm:px-8 md:px-12 lg:px-20 xl:px-52 my-10">
-        <ProfilContainer title={t("marketTitle")} description={t("marketSubtitle")}>
+        <ProfilContainer
+          title={t("marketTitle")}
+          description={t("marketSubtitle")}
+          descriptionClassName="sm:max-w-none sm:whitespace-nowrap sm:overflow-hidden sm:text-ellipsis"
+        >
           <LiveQuotesTable />
           <div className="mt-8 overflow-hidden rounded-lg border border-gray-200 bg-[#0F0F0F]">
             <iframe
