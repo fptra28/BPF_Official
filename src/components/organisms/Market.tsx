@@ -348,6 +348,10 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
     };
   }, [t]);
 
+  const INDEX_BASES = new Set(['XUL10', 'BCO10', 'HKK50', 'JPK50']);
+  const indexCards = marketData.filter((item) => INDEX_BASES.has(canonicalizeBaseSymbol(normalizeBaseSymbol(item.symbol))));
+  const forexCards = marketData.filter((item) => !INDEX_BASES.has(canonicalizeBaseSymbol(normalizeBaseSymbol(item.symbol))));
+
   return (
     <section className="py-16 bg-gradient-to-b from-white to-[#F8F9FF] relative overflow-hidden">
       {/* Decorative elements */}
@@ -385,13 +389,30 @@ export default function Market({ showOhlc = true }: { showOhlc?: boolean }) {
               </div>
             ))}
           </div>
-        ) : (
+        ) : showOhlc ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <AnimatePresence>
               {marketData.map((item, index) => (
                 <MarketCard key={item.symbol} item={item} index={index} showOhlc={showOhlc} />
               ))}
             </AnimatePresence>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <AnimatePresence>
+                {indexCards.map((item, index) => (
+                  <MarketCard key={item.symbol} item={item} index={index} showOhlc={showOhlc} />
+                ))}
+              </AnimatePresence>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+              <AnimatePresence>
+                {forexCards.map((item, index) => (
+                  <MarketCard key={item.symbol} item={item} index={index} showOhlc={showOhlc} />
+                ))}
+              </AnimatePresence>
+            </div>
           </div>
         )}
         

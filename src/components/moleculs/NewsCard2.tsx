@@ -47,7 +47,26 @@ export default function NewsCard2({ date, title, content, link, image, category,
     // Fungsi hapus HTML tag
     const stripHtml = (html: string) => {
         if (!html) return '';
-        return html.replace(/<[^>]+>/g, '');
+
+        const withoutTags = html.replace(/<[^>]+>/g, '');
+
+        const decodeEntities = (text: string) => {
+            const named: Record<string, string> = {
+                nbsp: '\u00A0',
+                amp: '&',
+                lt: '<',
+                gt: '>',
+                quot: '"',
+                apos: "'",
+            };
+
+            return text
+                .replace(/&([a-zA-Z]+);/g, (match, name) => named[name] ?? match)
+                .replace(/&#(\d+);/g, (_, num) => String.fromCharCode(Number(num)))
+                .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+        };
+
+        return decodeEntities(withoutTags).replace(/\u00A0/g, ' ').replace(/\s+/g, ' ').trim();
     };
 
     // Function to handle image error with localized text
