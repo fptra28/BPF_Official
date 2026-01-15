@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { connectMarketSocket, MarketTick } from "@/services/marketSocket";
+import { formatMarketNumber, getMarketFractionDigits } from "@/utils/marketNumberFormat";
 
 type Direction = "up" | "down" | "neutral";
 
@@ -79,9 +80,15 @@ const formatSymbol = (symbol: string) => {
 const formatPrice = (symbol: string, price: number | null | undefined): string => {
   if (price === undefined || price === null) return "-.-";
   try {
-    if (symbol?.includes("IDR")) return `Rp${price.toLocaleString("id-ID")}`;
-    if (symbol?.includes("USD")) return `$${price.toLocaleString("en-US")}`;
-    return price.toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (symbol?.includes("IDR")) {
+      return `Rp${price.toLocaleString("en-US", { useGrouping: false, maximumFractionDigits: 0 })}`;
+    }
+
+    if (symbol?.includes("USD")) {
+      return `$${formatMarketNumber(price, 2)}`;
+    }
+
+    return formatMarketNumber(price, getMarketFractionDigits(symbol));
   } catch {
     return String(price);
   }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
 import { connectMarketSocket, MarketTick } from '@/services/marketSocket';
+import { formatMarketNumber, getMarketFractionDigits } from '@/utils/marketNumberFormat';
 
 const LastUpdatedTime = () => {
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -88,9 +89,15 @@ const MarketCard = ({
     if (price === undefined || price === null) return '-.-';
     
     try {
-      if (symbol?.includes('IDR')) return `Rp${price.toLocaleString('id-ID')}`;
-      if (symbol?.includes('USD')) return `$${price.toLocaleString('en-US')}`;
-      return price.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (symbol?.includes('IDR')) {
+        return `Rp${price.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 0 })}`;
+      }
+
+      if (symbol?.includes('USD')) {
+        return `$${formatMarketNumber(price, 2)}`;
+      }
+
+      return formatMarketNumber(price, getMarketFractionDigits(symbol));
     } catch (error) {
       console.error('Error formatting price:', { symbol, price, error });
       return price.toString();

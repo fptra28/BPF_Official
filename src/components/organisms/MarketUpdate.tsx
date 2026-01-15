@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { fetchLatestNews, NewsItem } from "@/services/newsService";
 import { connectMarketSocket, MarketTick } from "@/services/marketSocket";
+import { formatMarketNumber, getMarketFractionDigits } from "@/utils/marketNumberFormat";
 
 interface MarketItem {
   symbol: string;
@@ -100,10 +101,12 @@ export default function MarketUpdate() {
     }, [fetchData, handleSocketData]);
 
     const formatPrice = (symbol: string, price: number): string => {
-        if (!price && price !== 0) return '-';
-        if (symbol.includes('IDR')) return `Rp${price.toLocaleString('id-ID')}`;
+        if (price === null || price === undefined) return '-';
+        if (symbol.includes('IDR')) return `Rp${price.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 0 })}`;
         if (symbol.includes('BTC')) return `$${price.toLocaleString('en-US')}`;
-        return `$${price.toFixed(2)}`;
+        if (symbol.includes('USD')) return `$${formatMarketNumber(price, 2)}`;
+
+        return formatMarketNumber(price, getMarketFractionDigits(symbol));
     };
 
     const formatPercent = (percent: number): string => {
