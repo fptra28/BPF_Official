@@ -8,32 +8,16 @@ interface StepProps {
 }
 
 interface BankAccount {
-  name: string;
+  bank: string;
   idr: string;
-  usd: string;
+  usd?: string;
 }
 
 export default function RegistrationFlow() {
   const { t } = useTranslation('prosedur');
   const steps = t('registrationFlow.steps', { returnObjects: true }) as StepProps[];
 
-  const bankAccounts: BankAccount[] = [
-    {
-      name: t('registrationFlow.bankAccounts.bca.name', 'Bank BCA – Sudirman'),
-      idr: t('registrationFlow.bankAccounts.bca.idr', 'IDR: 035 – 311 – 8975'),
-      usd: t('registrationFlow.bankAccounts.bca.usd', 'USD: 035 – 311 – 7600')
-    },
-    {
-      name: t('registrationFlow.bankAccounts.cimb.name', 'Bank CIMB Niaga – Gajahmada'),
-      idr: t('registrationFlow.bankAccounts.cimb.idr', 'IDR: 800 – 12 – 97271 – 00'),
-      usd: t('registrationFlow.bankAccounts.cimb.usd', 'USD: 800 – 01 – 20945 – 40')
-    },
-    {
-      name: t('registrationFlow.bankAccounts.bni.name', 'Bank BNI – Gambir'),
-      idr: t('registrationFlow.bankAccounts.bni.idr', 'IDR: 017 – 5008 – 590'),
-      usd: t('registrationFlow.bankAccounts.bni.usd', 'USD: 017 – 5020 – 200')
-    }
-  ];
+  const bankAccounts = (t('bankAccounts', { returnObjects: true }) as BankAccount[]) || [];
 
   const renderStepContent = (step: StepProps) => {
     if (step.items && step.items.length > 0) {
@@ -57,7 +41,7 @@ export default function RegistrationFlow() {
       <h2 className="text-2xl font-bold text-gray-800 mb-2">
         {t('registrationFlow.title', 'Alur Pendaftaran')}
       </h2>
-      <div className="w-20 h-1 bg-green-500 mb-8"></div>
+      <div className="w-20 h-1 bg-[#FF0000] mb-8"></div>
       
       <div className="relative">
         {/* Garis vertikal */}
@@ -67,7 +51,7 @@ export default function RegistrationFlow() {
           {steps.map((step: StepProps, index: number) => (
             <div key={index} className="relative flex">
               {/* Bulatan */}
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold z-10">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#FF0000] flex items-center justify-center text-white font-bold z-10">
                 {index + 1}
               </div>
               
@@ -86,15 +70,19 @@ export default function RegistrationFlow() {
         <h3 className="text-xl font-semibold mb-4">
           {t('registrationFlow.bankAccounts.title', 'Rekening Bank Perusahaan')}
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
-          {bankAccounts.map((bank: BankAccount, index: number) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow">
-              <p className="font-semibold">{bank.name}</p>
-              <p className="mt-2">{bank.idr}</p>
-              <p>{bank.usd}</p>
-            </div>
-          ))}
-        </div>
+        {Array.isArray(bankAccounts) && bankAccounts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+            {bankAccounts.map((bank: BankAccount, index: number) => (
+              <div key={index} className="bg-white p-4 rounded-lg shadow">
+                <p className="font-semibold">{bank.bank}</p>
+                <p className="mt-2">{bank.idr}</p>
+                {bank.usd && <p>{bank.usd}</p>}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">{t('noDataMessage', { defaultValue: 'Data belum tersedia.' })}</p>
+        )}
       </div>
     </div>
   );

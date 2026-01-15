@@ -4,6 +4,7 @@ import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import ProfilContainer from "@/components/templates/PageContainer/Container";
 import PageTemplate from "@/components/templates/PageTemplate";
+import RegistrationFlow from '@/components/organisms/RegistrationFlow';
 
 export const getStaticProps: GetStaticProps = async ({ locale = 'id' }) => {
   return {
@@ -33,6 +34,10 @@ const RegistrasiOnline = () => {
                   priority
                 />
               </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
+              <RegistrationFlow />
             </div>
           </div>
         </ProfilContainer>
