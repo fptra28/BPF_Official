@@ -7,6 +7,7 @@ import nextI18NextConfig from "../../next-i18next.config";
 
 import LoadingScreen from "@/components/organisms/LoadingScreen";
 import ScrollToTop from "@/components/atoms/ScrollToTop";
+import { initFirebaseAnalytics, logPageView } from "@/config/firebase";
 
 function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
@@ -29,6 +30,21 @@ function App({ Component, pageProps }: AppProps) {
       router.events.off("routeChangeError", handleComplete);
     };
   }, [router]);
+
+  // Firebase Analytics: init + page_view on client route changes
+  useEffect(() => {
+    initFirebaseAnalytics();
+    logPageView(router.asPath);
+
+    const handleRouteChangeComplete = (url: string) => {
+      logPageView(url);
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChangeComplete);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChangeComplete);
+    };
+  }, [router.events]);
 
   // ✅ Handle locale changes (tanpa redirect manual)
   useEffect(() => {
