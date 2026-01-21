@@ -325,7 +325,7 @@
   
     "petunjukTransaksi": {
       "title": "PETUNJUK PELAKSANAAN TRANSAKSI",
-      "description": "Nasabah dapat menyampaikan amanat transaksi secara online maupun melalui telepon, dengan dianjurkan melakukan simulasi terlebih dahulu sebelum menggunakan akun real.",
+      "description": "Setelah memiliki akun, nasabah dapat melakukan transaksi secara online, fleksibel dan real-time melalui platform online dengan dukungan sistem yang aman dan efisien.",
       "onlineRequirements": "Persiapan untuk Transaksi Online:",
       "requirements": [
         "Memiliki jaringan internet yang stabil.",
@@ -338,7 +338,6 @@
       },
       "Memiliki User ID dan Password dari PT BestProfit Futures. Password dapat diganti oleh nasabah sesuai kebutuhan."
     ],
-    "description2": "Setelah memiliki akun, nasabah dapat melakukan transaksi secara online, fleksibel dan real-time melalui platform online dengan dukungan sistem yang aman dan efisien.",
     "note": "Catatan: Disarankan nasabah melakukan simulasi terlebih dahulu sebelum bertransaksi menggunakan akun real.",
     "attention": {
       "title": "Perhatian:",

@@ -23,17 +23,14 @@ interface RequirementItem {
 export default function PetunjukTransaksi() {
   const { t } = useTranslation('prosedur');
   const requirements = t('petunjukTransaksi.requirements', { returnObjects: true }) as (string | RequirementItem)[];
-  const description2 = t('petunjukTransaksi.description2');
-  const hasDescription2 =
-    typeof description2 === 'string' &&
-    description2.trim().length > 0 &&
-    description2 !== 'petunjukTransaksi.description2';
 
   return (
     <PageTemplate title={t('petunjukTransaksi.title', 'Petunjuk Pelaksanaan Transaksi')}>
       <div className="px-4 sm:px-8 md:px-12 lg:px-20 xl:px-52 my-10">
         <ProfilContainer title={t('petunjukTransaksi.title', 'Petunjuk Pelaksanaan Transaksi')}>
           <div className="space-y-6 text-black text-sm sm:text-base leading-relaxed">
+            <p className="text-justify">{t('petunjukTransaksi.description')}</p>
+
             {/* Persiapan transaksi online + list */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-black">
@@ -67,8 +64,6 @@ export default function PetunjukTransaksi() {
                 ))}
               </ul>
             </div>
-
-            {hasDescription2 && <p className="text-justify">{description2}</p>}
           </div>
         </ProfilContainer>
       </div>
