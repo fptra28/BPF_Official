@@ -333,15 +333,9 @@
       "onlineRequirements": "Persiapan untuk Transaksi Online:",
       "requirements": [
         "Memiliki jaringan internet yang stabil.",
-        {
-        "text": "Mengakses platform melalui:",
-        "link": {
-          "url": "https://etrade.bestprofit-futures.com/login ",
-          "text": "https://etrade.bestprofit-futures.com/login "
-        }
-      },
-      "Memiliki User ID dan Password dari PT BestProfit Futures. Password dapat diganti oleh nasabah sesuai kebutuhan."
-    ],
+        "Mengakses platform melalui aplikasi/portal resmi perusahaan.",
+        "Memiliki User ID dan Password dari PT BestProfit Futures. Password dapat diganti oleh nasabah sesuai kebutuhan."
+      ],
     "note": "Catatan: Disarankan nasabah melakukan simulasi terlebih dahulu sebelum bertransaksi menggunakan akun real.",
     "attention": {
       "title": "Perhatian:",

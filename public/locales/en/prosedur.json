@@ -348,15 +348,9 @@
       "onlineRequirements": "Preparation for Online Transactions:",
       "requirements": [
         "Have a stable internet connection.",
-      {
-        "text": "Access the platform via:",
-        "link": {
-          "url": "https://etrade.bestprofit-futures.com/login",
-          "text": "https://etrade.bestprofit-futures.com/login"
-        }
-      },
-      "Have a User ID and Password from PT BestProfit Futures. The password can be changed by the client as needed."
-    ],
+        "Access the platform through the official company application/portal.",
+        "Have a User ID and Password from PT BestProfit Futures. The password can be changed by the client as needed."
+      ],
     "note": "Note: Clients are advised to conduct a simulation first before trading with a real account.",
     "attention": {
       "title": "Attention:",

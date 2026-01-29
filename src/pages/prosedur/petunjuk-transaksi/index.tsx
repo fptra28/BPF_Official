@@ -49,14 +49,9 @@ export default function PetunjukTransaksi() {
                       ) : (
                         <span>
                           {item.text}{' '}
-                          <a
-                            href={item.link?.url}
-                            className="text-[#F2AC59] hover:underline break-all"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <span className="text-[#F2AC59]">
                             {item.link?.text}
-                          </a>
+                          </span>
                         </span>
                       )}
                     </div>

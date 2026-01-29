@@ -1,9 +1,9 @@
 // Home
 
 import { useState, useEffect } from "react";
-import { GetStaticProps } from 'next';
+import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import PageTemplate from "@/components/templates/PageTemplate";
 import CarouselWithContent from "@/components/organisms/CarouselWithContent";
 import ProdukContainer from "@/components/organisms/ProdukContainer";
@@ -18,25 +18,24 @@ import LiveQuotesPromo from "@/components/moleculs/LiveQuotesPromo";
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale || 'id', [
-        'common', 
-        'pengumuman', 
-        'market',
-        'berita',
-        'produk',
-        'aboutus',
-        'welcome',
-        'footer',
-        'wakil_pialang'
+      ...(await serverSideTranslations(locale || "id", [
+        "common",
+        "pengumuman",
+        "market",
+        "berita",
+        "produk",
+        "aboutus",
+        "welcome",
+        "footer",
+        "wakil_pialang",
       ])),
     },
   };
 };
 
-
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
-  const { t } = useTranslation('produk', { useSuspense: false });
+  const { t } = useTranslation("produk", { useSuspense: false });
 
   useEffect(() => {
     // Nonaktifkan sementara modal welcome
@@ -47,9 +46,8 @@ export default function HomePage() {
 
   return (
     <PageTemplate>
-      <div className="fixed top-4 right-4 z-50">
-      </div>
-      
+      <div className="fixed top-4 right-4 z-50"></div>
+
       {/* Welcome Modal */}
       <WelcomeModal isOpen={showModal} onClose={handleCloseModal} />
 
