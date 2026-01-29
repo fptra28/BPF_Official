@@ -49,7 +49,7 @@ export default function HomePage() {
       <div className="fixed top-4 right-4 z-50"></div>
 
       {/* Welcome Modal */}
-      <WelcomeModal isOpen={showModal} onClose={handleCloseModal} />
+      {/* <WelcomeModal isOpen={showModal} onClose={handleCloseModal} /> */}
 
       {/* Carousel */}
       <CarouselWithContent />

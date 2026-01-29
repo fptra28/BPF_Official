@@ -1,9 +1,9 @@
 "use client";
 
 const banner = {
-  title: "Welcome to Bestprofit Futures",
+  title: "Bestprofit Futures",
   description:
-    "Selamat datang. Kami siap membantu perjalanan trading Anda dengan layanan profesional dan dukungan terbaik.",
+    "Awali perjalanan investasi Anda bersama pialang berjangka tepercaya yang didukung layanan profesional dan edukasi terstruktur.",
   image: "/assets/bpf-logo-backup.png",
 };
 
